@@ -26,7 +26,6 @@ import butterknife.ButterKnife;
  */
 
 public class PersonIdentification extends AppCompatActivity{
-    IdentifyTask task;
     @BindView(R.id.button) Button createGroup;
     @BindView(R.id.button2) Button createPerson;
     @BindView(R.id.button3) Button addPerson;
@@ -45,39 +44,40 @@ public class PersonIdentification extends AppCompatActivity{
         identify_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //task.execute();
+                String group_name = name.getText().toString();
+                if(name.getText() != null){
+                    new CreateGroup().execute(generateID(group_name), group_name);
+                }
             }
         });
     }
+    /*
+    Need to gener
+     */
+    public String generateID(String val){
+        return (val + 10); // test ID generator
+    }
+    static class CreateGroup extends AsyncTask<String, String, String> {
+        private FaceServiceClient faceServiceClient =
+                new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
 
-}
-
-class IdentifyTask extends AsyncTask<InputStream, String, Face[]> {
-    private FaceServiceClient faceServiceClient =
-            new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
-
-    @Override
-    protected Face[] doInBackground(InputStream... params) {
-        try {
-            publishProgress("Detecting...");
-            Face[] result = faceServiceClient.detect(
-                    params[0],
-                    true,         // returnFaceId
-                    false,        // returnFaceLandmarks
-                    null           // returnFaceAttributes: a string like "age, gender"
-            );
-            if (result == null)
-            {
-                publishProgress("Detection Finished. Nothing detected");
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                publishProgress("Detecting...");
+                faceServiceClient.createPersonGroup(
+                        params[0],
+                        params[1],
+                        params[2]
+                );
+                publishProgress("Created group with name", params[1]);
+                return "";
+            } catch (Exception e) {
+                publishProgress("Creation failed: " + e);
                 return null;
             }
-            publishProgress(
-                    String.format(Locale.US, "Detection Finished. %d face(s) detected",
-                            result.length));
-            return result;
-        } catch (Exception e) {
-            publishProgress("Detection failed");
-            return null;
         }
     }
+
+    static class CreatePerson extends AsyncTask<String, String, String>
 }
