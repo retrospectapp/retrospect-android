@@ -85,7 +85,7 @@ public class PersonIdentification extends AppCompatActivity{
                             Log.d("PERSON GROUP", group.name);
                         }
                     }
-                });
+                }).execute();
             }
         });
     }
