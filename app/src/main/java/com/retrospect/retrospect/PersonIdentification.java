@@ -1,21 +1,18 @@
 package com.retrospect.retrospect;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.FaceServiceRestClient;
 import com.microsoft.projectoxford.face.contract.*;
 
-import java.io.InputStream;
-import java.util.Locale;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -33,9 +30,10 @@ public class PersonIdentification extends AppCompatActivity{
     @BindView(R.id.button4) Button displayDetails;
     @BindView(R.id.button5) Button identify_button;
     @BindView(R.id.textView3) TextView tvname;
-    @BindView(R.id.editText) EditText group_name_text;
-    @BindView(R.id.editText2) EditText person_name_text;
+    @BindView(R.id.editText2) EditText group_name_text;
+    @BindView(R.id.editText) EditText person_name_text;
     private final int PICK_IMAGE = 1;
+    private final String BTN_TAG = "BTN_PRESS";
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -45,8 +43,9 @@ public class PersonIdentification extends AppCompatActivity{
         createGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(group_name_text.getText() != null){
+                if(!group_name_text.getText().toString().equals("")){
                     String group_name = group_name_text.getText().toString();
+                    Log.d(BTN_TAG, "Attempting to create Person Group");
                     new CreateGroup().execute(generateID(group_name), group_name, null);
                 }
             }
@@ -54,7 +53,7 @@ public class PersonIdentification extends AppCompatActivity{
         createPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    if(group_name_text.getText() != null && person_name_text.getText() != null){
+                    if(!group_name_text.getText().toString().equals("") && !person_name_text.getText().toString().equals("")){
                         String group_name = group_name_text.getText().toString();
                         String person_name = person_name_text.getText().toString();
                         new CreatePerson().execute(generateID(group_name), person_name, null);
@@ -64,7 +63,7 @@ public class PersonIdentification extends AppCompatActivity{
         addPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(group_name_text.getText() != null && person_name_text.getText() != null){
+                if(!group_name_text.getText().toString().equals("") && !person_name_text.getText().toString().equals("")){
                     String group_ID = generateID(group_name_text.getText().toString());
                     UUID person_ID = UUID.fromString(generateID(person_name_text.getText().toString()));
                     String user_data = null; //fix
@@ -74,11 +73,32 @@ public class PersonIdentification extends AppCompatActivity{
                 }
             }
         });
+
+        displayDetails.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Log.d(BTN_TAG, "Attempting to list all groups.");
+                new ListGroups(new ListGroups.ListResponse() {
+                    @Override
+                    public void processFinished(PersonGroup[] result) {
+                        for(PersonGroup group: result){
+                            Log.d("PERSON GROUP", group.name);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public String generateID(String val){
-        return (val + 10); // test ID generator
+        char[] ch = val.toCharArray();
+        int sum = 0;
+        for (char c : ch) {
+            sum += c - 'A' + 1;
+        }
+        return String.valueOf(sum);
     }
+
     static class CreateGroup extends AsyncTask<String, String, String> {
         private FaceServiceClient faceServiceClient =
                 new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
@@ -86,18 +106,49 @@ public class PersonIdentification extends AppCompatActivity{
         @Override
         protected String doInBackground(String... params) {
             try {
-                publishProgress("Creating Group...");
+                Log.d("API_CALL", "API is being called.");
                 faceServiceClient.createPersonGroup(
                         params[0],
                         params[1],
                         params[2]
                 );
-                publishProgress("Created group with name", params[1]);
+                Log.d("API_RESPONSE", "Created group with name: " + params[1]);
                 return "";
             } catch (Exception e) {
-                publishProgress("Creation failed: " + e);
+                Log.d("API_CALL", "API call failed due to: " + e);
                 return null;
             }
+        }
+    }
+
+    static class ListGroups extends AsyncTask<String, String, PersonGroup[]> {
+        public interface ListResponse {
+            void processFinished(PersonGroup[] result);
+        }
+
+        public ListResponse listResponse = null;
+
+        public ListGroups(ListResponse listResponse){
+            this.listResponse = listResponse;
+        }
+
+        private FaceServiceClient faceServiceClient =
+                new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
+        protected PersonGroup[] doInBackground(String... params){
+            try{
+                PersonGroup[] groups = faceServiceClient.getPersonGroups();
+                Log.d("API_RESPONSE", "Listed available person groups");
+                return groups;
+            }catch(Exception e){
+                Log.d("API_RESPONSE", "Could not list person groups.");
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(PersonGroup[] personGroups) {
+            super.onPostExecute(personGroups);
+            listResponse.processFinished(personGroups);
         }
     }
 
@@ -109,15 +160,15 @@ public class PersonIdentification extends AppCompatActivity{
         protected String doInBackground(String... params) {
             try {
                 publishProgress("Creating Person...");
-                faceServiceClient.createPerson(
-                        params[0],
-                        params[1],
-                        params[2]
-                );
-                publishProgress("Created Person with name", params[1]);
-                return "";
+                String personID = faceServiceClient.createPerson(
+                        params[0], //personGroupID
+                        params[1], //Name
+                        null  //Optional: User Data
+                ).personId.toString();
+                Log.d("API_RESPONSE", "Created person with name: " + params[1] + "and ID: " + personID);
+                return personID;
             } catch (Exception e) {
-                publishProgress("Creation failed: " + e);
+                Log.d("API_RESPONSE", "Could not create person due to error: " + e);
                 return null;
             }
         }
