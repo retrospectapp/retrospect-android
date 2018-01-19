@@ -1,129 +1,24 @@
 package com.retrospect.retrospect;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.FaceServiceRestClient;
-import com.microsoft.projectoxford.face.contract.*;
+import com.microsoft.projectoxford.face.contract.Face;
+import com.microsoft.projectoxford.face.contract.FaceRectangle;
+import com.microsoft.projectoxford.face.contract.PersonGroup;
 
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Locale;
 import java.util.UUID;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
- * Created by Programming on 1/13/2018.
- * Dynamic interface to simulate interaction with Microsoft Face API
+ * Created by Shreyas on 1/18/2018.
+ *
  */
 
-public class PersonIdentification extends AppCompatActivity{
-    @BindView(R.id.button) Button createGroup;
-    @BindView(R.id.button2) Button createPerson;
-    @BindView(R.id.button3) Button addPersonFace;
-    @BindView(R.id.button4) Button displayDetails;
-    @BindView(R.id.button5) Button identify_button;
-    @BindView(R.id.textView3) TextView tvname;
-    @BindView(R.id.editText2) EditText group_name_text;
-    @BindView(R.id.editText) EditText person_name_text;
-    private final int PICK_IMAGE = 1;
-    private final int CAMERA_REQUEST = 1000;
-    private final String BTN_TAG = "BTN_PRESS";
-
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.identification);
-        ButterKnife.bind(this);
-
-        createGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!group_name_text.getText().toString().equals("")){
-                    String group_name = group_name_text.getText().toString();
-                    Log.d(BTN_TAG, "Attempting to create Person Group");
-                    new CreateGroup().execute(generateID(group_name), group_name, null);
-                }
-            }
-        });
-        createPerson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    if(!group_name_text.getText().toString().equals("") && !person_name_text.getText().toString().equals("")){
-                        String group_name = group_name_text.getText().toString();
-                        String person_name = person_name_text.getText().toString();
-                        new CreatePerson().execute(generateID(group_name), person_name, null);
-                }
-            }
-        });
-        addPersonFace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!group_name_text.getText().toString().equals("") && !person_name_text.getText().toString().equals("")){
-                    String group_ID = generateID(group_name_text.getText().toString());
-                    UUID person_ID = UUID.fromString(generateID(person_name_text.getText().toString()));
-                    String user_data = null; //fix
-                    FaceRectangle face = null; //fix
-                    String targetFace = null; //fix
-                    new AddPersonFace(group_ID,person_ID,user_data, targetFace, face).execute();
-                }
-            }
-        });
-
-        displayDetails.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Log.d(BTN_TAG, "Attempting to list all groups.");
-                new ListGroups(new ListGroups.ListResponse() {
-                    @Override
-                    public void processFinished(PersonGroup[] result) {
-                        for(PersonGroup group: result){
-                            Log.d("PERSON GROUP", group.name);
-                        }
-                    }
-                }).execute();
-            }
-        });
-
-        identify_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
-            }
-        });
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO: Convert Intent data to InputStream!
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            if(data.getExtras()!=null) {
-                getContentName(getContentResolver(), data.getData());
-                InputStream is = getContentResolver().openInputStream(data.getData());
-                new detectFace().execute();
-            }
-        }
-    }
-
-    public String generateID(String val){
-        char[] ch = val.toCharArray();
-        int sum = 0;
-        for (char c : ch) {
-            sum += c - 'A' + 1;
-        }
-        return String.valueOf(sum);
-    }
+public abstract class FaceRequests {
 
     static class detectFace extends AsyncTask<InputStream, String, Face[]> {
         private FaceServiceClient faceServiceClient =
@@ -181,9 +76,9 @@ public class PersonIdentification extends AppCompatActivity{
             void processFinished(PersonGroup[] result);
         }
 
-        public ListResponse listResponse = null;
+        public PersonIdentification.ListGroups.ListResponse listResponse = null;
 
-        public ListGroups(ListResponse listResponse){
+        public ListGroups(PersonIdentification.ListGroups.ListResponse listResponse){
             this.listResponse = listResponse;
         }
 
@@ -228,6 +123,7 @@ public class PersonIdentification extends AppCompatActivity{
             }
         }
     }
+
     static class AddPersonFace extends AsyncTask<String, String, String> {
         private FaceServiceClient faceServiceClient =
                 new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
