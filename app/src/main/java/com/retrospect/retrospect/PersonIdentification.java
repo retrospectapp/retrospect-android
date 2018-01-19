@@ -120,8 +120,7 @@ public class PersonIdentification extends AppCompatActivity{
                     byte[] bitmap_data = bos.toByteArray();
                     ByteArrayInputStream bs = new ByteArrayInputStream(bitmap_data);
                     new detectFace(new detectFace.DetectFaceResponse(){
-                        Face[] processFinished(Face[] faces){
-                            return faces;
+                        void processFinished(Face[] faces){
                         }
                     }).execute(bs);
                 } catch(IOException e){
@@ -145,7 +144,7 @@ public class PersonIdentification extends AppCompatActivity{
                 new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0",
                         "068682577ef84250b24aafbc3b2c8e66");
         public interface DetectFaceResponse {
-            Face[] processFinished(Face[] result);
+            void processFinished(Face[] result);
         }
 
         private DetectFaceResponse detectFaceResponse = null;
