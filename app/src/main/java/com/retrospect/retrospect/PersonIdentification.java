@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,9 @@ import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.FaceServiceRestClient;
 import com.microsoft.projectoxford.face.contract.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
@@ -109,9 +113,20 @@ public class PersonIdentification extends AppCompatActivity{
         //TODO: Convert Intent data to InputStream!
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             if(data.getExtras()!=null) {
-                getContentName(getContentResolver(), data.getData());
-                InputStream is = getContentResolver().openInputStream(data.getData());
-                new detectFace().execute();
+                try{
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos );
+                    byte[] bitmap_data = bos.toByteArray();
+                    ByteArrayInputStream bs = new ByteArrayInputStream(bitmap_data);
+                    new detectFace(new detectFace.DetectFaceResponse(){
+                        Face[] processFinished(Face[] faces){
+                            return faces;
+                        }
+                    }).execute(bs);
+                } catch(IOException e){
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -127,7 +142,22 @@ public class PersonIdentification extends AppCompatActivity{
 
     static class detectFace extends AsyncTask<InputStream, String, Face[]> {
         private FaceServiceClient faceServiceClient =
-                new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
+                new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0",
+                        "068682577ef84250b24aafbc3b2c8e66");
+        public interface DetectFaceResponse {
+            Face[] processFinished(Face[] result);
+        }
+
+        private DetectFaceResponse detectFaceResponse = null;
+
+        private detectFace(DetectFaceResponse detectFaceResponse){
+            this.detectFaceResponse = detectFaceResponse;
+        }
+
+        @Override
+        protected void onPostExecute(Face[] faces) {
+            detectFaceResponse.processFinished(faces);
+        }
 
         @Override
         protected Face[] doInBackground(InputStream... params) {
@@ -202,7 +232,7 @@ public class PersonIdentification extends AppCompatActivity{
 
         @Override
         protected void onPostExecute(PersonGroup[] personGroups) {
-            //super.onPostEcxecute(personGroups);
+            super.onPostExecute(personGroups);
             listResponse.processFinished(personGroups);
         }
     }
@@ -228,6 +258,7 @@ public class PersonIdentification extends AppCompatActivity{
             }
         }
     }
+
     static class AddPersonFace extends AsyncTask<String, String, String> {
         private FaceServiceClient faceServiceClient =
                 new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
@@ -244,6 +275,7 @@ public class PersonIdentification extends AppCompatActivity{
             this.target_face= target_face;
             this.face= face;
         }
+
         @Override
         protected String doInBackground(String... params) {
             try {
