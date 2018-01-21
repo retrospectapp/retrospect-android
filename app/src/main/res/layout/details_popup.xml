@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/rounded_corners"
-    android:backgroundTint="@android:color/holo_blue_light"
+    android:backgroundTint="#383f48"
     android:orientation="vertical"
     android:layout_width="350dp"
     android:layout_height="475dp"
@@ -11,6 +11,7 @@
         android:id="@+id/txtclose"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:textColor="@android:color/white"
         android:text="X"
         android:textSize="25dp"
         android:textStyle="bold"
@@ -18,15 +19,25 @@
         android:gravity="center"
         />
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
+            android:textColor="@android:color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Title"
-            android:textColor="@android:color/black"
             android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            />
+        <TextView
+            android:textColor="#878787"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textSize="18dp"
             android:textStyle="bold"
             android:layout_gravity="center_horizontal"
             />
@@ -44,6 +55,8 @@
             android:layout_height="100dp">
 
             <TextView
+                android:layout_marginLeft="10dp"
+                android:textColor="@android:color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="This popup is getting data from :"
@@ -57,6 +70,7 @@
             android:layout_width="0dp"
             android:layout_height="100dp">
             <TextView
+                android:textColor="@android:color/white"
                 android:text="QQQ"
                 android:id="@+id/indexPlaceholder"
                 android:layout_width="wrap_content"
@@ -68,25 +82,21 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="330dp"
+        android:layout_width="match_parent"
+        android:padding="10dp"
         android:layout_height="100dp"
         android:gravity="center"
         android:orientation="vertical">
 
         <TextView
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_horizontal"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescription"
             android:textSize="18sp" />
     </LinearLayout>
-    <Button
 
-        android:id="@+id/btnfollow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="WOOOOO"
-        android:layout_marginTop="25dp"
-        android:layout_gravity="center_horizontal"
-        />
 
 </LinearLayout>

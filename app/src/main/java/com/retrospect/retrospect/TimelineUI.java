@@ -1,17 +1,15 @@
 package com.retrospect.retrospect;
 
+import android.os.Bundle;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.qap.ctimelineview.TimelineRow;
 import org.qap.ctimelineview.TimelineViewAdapter;
@@ -19,12 +17,21 @@ import org.qap.ctimelineview.TimelineViewAdapter;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+
 public class TimelineUI extends ListActivity {
     Dialog myDialog;
+
+
+    FloatingActionMenu fam;
+    FloatingActionButton people, event, reminder;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_timeline_ui);   //Some guy on stackoverflow told me I don't need this?
         myDialog = new Dialog(this);
 
@@ -82,10 +89,40 @@ public class TimelineUI extends ListActivity {
         ListView myListView = getListView();//(ListView) findViewById(R.id.lis);
         myListView.setAdapter(myAdapter);
 
+//        setContentView(R.layout.activity_timeline_ui);
+
+        fam = (FloatingActionMenu) findViewById(R.id.floatingActionMenu);
+        people = (FloatingActionButton) findViewById(R.id.peeps);
+        event = (FloatingActionButton) findViewById(R.id.eve);
+        reminder = (FloatingActionButton) findViewById(R.id.remi);
+
+
+        event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        people.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        reminder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
 
-    /**{@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onListItemClick(ListView l, View v, int pos, long id) {
         super.onListItemClick(l, v, pos, id);
@@ -95,11 +132,11 @@ public class TimelineUI extends ListActivity {
     public void ShowPopup(View v, int index) {
         TextView txtclose;
         myDialog.setContentView(R.layout.details_popup);
-        txtclose =(TextView) myDialog.findViewById(R.id.txtclose);
+        txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
         txtclose.setText("X");
         TextView placeholder;
-        placeholder =(TextView) myDialog.findViewById(R.id.indexPlaceholder);
-        placeholder.setText(index+"");
+        placeholder = (TextView) myDialog.findViewById(R.id.indexPlaceholder);
+        placeholder.setText(index + "");
         txtclose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,3 +148,4 @@ public class TimelineUI extends ListActivity {
     }
 
 }
+
