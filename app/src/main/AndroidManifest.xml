@@ -21,17 +21,16 @@
         <activity android:name=".MainActivity">
 
         </activity>
-        <activity android:name=".FaceRecognitionTest">
-
-        </activity>
-        <activity android:name=".PersonIdentification">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TimelineUI"></activity>
+        <activity android:name=".TimelineUI">
+
+        </activity>
     </application>
 
 </manifest>

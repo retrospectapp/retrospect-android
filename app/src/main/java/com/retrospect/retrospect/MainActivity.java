@@ -1,36 +1,18 @@
 package com.retrospect.retrospect;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.content.Intent;
-import android.view.View;
-
-
-import android.support.annotation.NonNull;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import android.graphics.Bitmap;
 import android.net.Uri;
-
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
+
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -42,12 +24,6 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 
 public class MainActivity extends AppCompatActivity {
-
-    SignInButton button;
-    FirebaseAuth mAuth;
-    private final static int RC_SIGN_IN =2;
-    GoogleApiClient mGoogleApiClient;
-    FirebaseAuth.AuthStateListener mAuthListener;
 
     public static final String TAG = "InspiringQuote";
     public static final String USERTAG = "UserData";
@@ -88,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         createReminder(reminder);
         createConnection(connection);
 
-        mAuth.addAuthStateListener(mAuthListener);
 
         fetchUser(user.getUUID());
         fetchPatient(patient.getUUID());
@@ -98,116 +73,38 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        button = (SignInButton) findViewById(R.id.googleBtn);
-        mAuth = FirebaseAuth.getInstance();
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn();
-            }
-        });
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser() != null){
-                    startActivity(new Intent(MainActivity.this, TimelineUI.class));
-                }
-            }
-        };
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
-                .build();
 
     }
 
-//    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestIdToken(getString(R.string.default_web_client_id))
-//            .requestEmail()
-//            .build();
 
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if(result.isSuccess()){
-                GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
-            }
-            else{
-                Toast.makeText(MainActivity.this, "Auth went wrong", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
-                        }
-                        else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("Tag", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-
-                        // ...
-                    }
-                });
-
-    }
 
     private void loadUserProfileImage(String userID){
         Glide.with(this).load(mProfileImagesRef.child(userID)).into(imageView);
     }
+
 
     private void createUser(User user){
 
         mUserRef.document(user.getUUID()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "User successfully added!");
+                Log.d(TAG, "User successfully created!");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Unable to successfully add user", e);
+                Log.w(TAG, "Failed to create user", e);
             }
         });
     }
+
 
     private void fetchUser(String userID){
 
@@ -217,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 if (documentSnapshot.exists()) {
                     User fetchedUser = documentSnapshot.toObject(User.class);
                     fetchedUser.toString();
+                    Log.d(USERTAG, "User successfully fetched");
                 }
                 else{
                     Log.d(USERTAG, "User doesn't exist");
@@ -225,17 +123,18 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(USERTAG, "Unable to read user", e);
+                Log.w(USERTAG, "Failed to read user", e);
             }
         });
     }
+
 
     private void deleteUser(String userID){
 
         mProfileImagesRef.child(userID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(DELTAG, "Successfully deleted profile image for user");
+                Log.d(DELTAG, "Profile image successfully deleted for user");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -247,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         mEventImagesRef.child(userID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(DELTAG, "Successfully deleted event images for user");
+                Log.d(DELTAG, "Event images successfully deleted for user");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -269,9 +168,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     private void loadPatientProfileImage(String userID){
         Glide.with(this).load(mProfileImagesRef.child(userID)).into(imageView);
     }
+
 
     private void createPatient(Patient patient){
 
@@ -283,11 +184,10 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Unable to successfully add patient");
+                Log.w(TAG, "Failed to add patient");
             }
         });
     }
-
 
 
     private void fetchPatient(String userID){
@@ -306,10 +206,12 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(PATTAG, "Unable to fetch patient", e);
+                Log.w(PATTAG, "Failed to fetch patient", e);
             }
         });
     }
+
+
 
     private void deletePatient(String userID){
 
@@ -371,11 +273,12 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Uri downloadURL = taskSnapshot.getDownloadUrl();
                 event.setImageURL(downloadURL.toString());
+                Log.d(EVENTTAG, "NEW EVENT IMAGE URL IS" + event.getImageURL());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(UPTAG, "Failed to upload event image", e);
+                Log.w(EVENTTAG, "Failed to upload event image", e);
             }
         });
 
@@ -406,7 +309,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void fetchEvent(String eventTitle){
 
         mUserEventRef.document(eventTitle).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -423,10 +325,11 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(EVENTTAG, "Unable to fetch event", e);
+                Log.w(EVENTTAG, "Failed to fetch event", e);
             }
         });
     }
+
 
     private void fetchEvents(){
 
@@ -441,6 +344,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void deleteEvent(String eventTitle){
 
@@ -481,7 +385,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     private void createReminder(Reminder reminder){
@@ -530,10 +433,11 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(REMTAG, "Unabled to successfully fetch reminder", e);
+                Log.w(REMTAG, "Failed to fetch reminder", e);
             }
         });
     }
+
 
     private void fetchReminders(){
 
@@ -548,6 +452,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void deleteReminder(String title){
 
@@ -578,7 +483,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void createConnection(final Connection connection){
 
         mUserConnectionRef.document(connection.getPersonID()).set(connection).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -593,7 +497,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         mPatientConnectionRef.document(connection.getPersonID()).set(connection).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -606,7 +509,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     private void fetchConnection(String personID){
@@ -630,6 +532,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     private void fetchConnections(){
 
         mPatientConnectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -643,6 +546,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void deleteConnection(String personID){
 
@@ -764,6 +668,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
     */
+
 }
-
-

@@ -64,6 +64,9 @@ public abstract class FaceRequests {
             e.printStackTrace();
         }
     }
+    /*
+    * TODO: Update all the Asynchronous tasks - reroute data so that it can be returned in abstract methods
+    * */
 
     static class DetectFace extends AsyncTask<InputStream, String, Face[]> {
         private FaceServiceClient faceServiceClient =
