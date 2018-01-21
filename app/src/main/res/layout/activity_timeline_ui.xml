@@ -8,8 +8,8 @@
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/floatingActionMenu"
-        android:layout_width="83dp"
-        android:layout_height="241dp"
+        android:layout_width="332dp"
+        android:layout_height="293dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
@@ -23,33 +23,36 @@
         app:layout_constraintVertical_bias="1.0"
         app:menu_backgroundColor="@android:color/transparent"
         app:menu_fab_label=""
+        app:menu_fab_size="normal"
         app:menu_openDirection="up"
         app:menu_showShadow="true"
-        app:menu_fab_size="normal">
+        app:menu_labels_textColor="@color/colorText"
+        app:menu_labels_colorNormal="@color/background"
+        app:menu_labels_colorPressed="@color/background">
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/Action1"
+            android:id="@+id/peeps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/person"
-            app:fab_size="normal"
-            app:menu_fab_label="@string/person" />
+            app:fab_label="@string/person"
+            app:fab_size="normal" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/Action2"
+            android:id="@+id/eve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/event"
-            app:fab_size="normal"
-            app:menu_fab_label="@string/event" />
+            app:fab_label="@string/event"
+            app:fab_size="normal" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/Action3"
+            android:id="@+id/remi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/reminder"
-            app:fab_size="normal"
-            app:menu_fab_label="@string/reminder" />
+            app:fab_label="@string/reminder"
+            app:fab_size="normal" />
 
     </com.github.clans.fab.FloatingActionMenu>
 
