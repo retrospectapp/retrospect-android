@@ -32,6 +32,9 @@ import butterknife.ButterKnife;
  */
 
 public class PersonIdentification extends AppCompatActivity{
+    private FaceServiceClient faceServiceClient =
+            new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0",
+                    "068682577ef84250b24aafbc3b2c8e66");
     @BindView(R.id.button) Button createGroup;
     @BindView(R.id.button2) Button createPerson;
     @BindView(R.id.button3) Button addPersonFace;
@@ -115,10 +118,15 @@ public class PersonIdentification extends AppCompatActivity{
                     ByteArrayInputStream bs = new ByteArrayInputStream(bitmap_data);
                     new detectFace(new detectFace.DetectFaceResponse() {
                         public void processFinished(Face[] faces) {
-                            /*UUID[] faceIDs = new UUID[faces.length];
+                            UUID[] faceIDs = new UUID[faces.length];
                             for(int i = 0; i < faces.length; i++){
                                 faceIDs[i] = faces[i].faceId;
-                            }*/
+                            }
+                            try {
+                                faceServiceClient.identity("Test", faceIDs, 3);
+                            } catch(Exception e){
+                                e.printStackTrace();
+                            }
                         }
                     }).execute(bs);
                 } catch (IOException e) {
@@ -278,7 +286,8 @@ public class PersonIdentification extends AppCompatActivity{
 
     static class AddPersonFace extends AsyncTask<String, String, String> {
         private FaceServiceClient faceServiceClient =
-                new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
+                new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0",
+                        "068682577ef84250b24aafbc3b2c8e66");
         String group_ID = null;
         UUID user_ID = null;
         InputStream img = null;
@@ -314,7 +323,8 @@ public class PersonIdentification extends AppCompatActivity{
 
     static class TrainPersonGroup extends AsyncTask<String, String, String> {
         private FaceServiceClient faceServiceClient =
-                new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
+                new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0",
+                        "068682577ef84250b24aafbc3b2c8e66");
 
         @Override
         protected String doInBackground(String... params) {
