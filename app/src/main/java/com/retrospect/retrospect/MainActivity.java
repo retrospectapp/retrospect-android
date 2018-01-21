@@ -48,7 +48,7 @@ public class MainActivity extends ListActivity {
     private Event event = new Event("CalHacks 4.0", "10/7/17", "We were awarded for Best Use of Microsoft Services", "UC Davis", null, "");
     private Reminder reminder = new Reminder("HackDavis 2018", "1/20/18", "11:00", "AM", "Get hyped and grind");
     private Connection connection = new Connection("Nithin Kumar", "hij789", "2302655", "Friend");
-
+    private Connection connection1 = new Connection("Kunal Patel", "asd3k3", "3298793", "Brother");
     private CollectionReference mUserRef = FirebaseFirestore.getInstance().collection("sampleData/Users/Accounts");
     private CollectionReference mPatientRef = FirebaseFirestore.getInstance().collection("sampleData/Patients/Accounts");
     private CollectionReference mUserEventRef = FirebaseFirestore.getInstance().collection("sampleData/Users/Accounts").document(user.getUUID()).collection("Events");
@@ -66,22 +66,24 @@ public class MainActivity extends ListActivity {
     private FloatingActionButton people_button, event_button, reminder_button;
     //ImageView imageView = findViewById(R.id.profileImageView);
 
+    ArrayList<Connection> connections;
+    ArrayList<Event> events;
+
     @Override
     protected void onStart(){
         super.onStart();
 
-        createUser(user);
-        createPatient(patient);
+        //createUser(user);
+        //createPatient(patient);
         //createEvent(event);
-        createReminder(reminder);
-        createConnection(connection);
+        //createReminder(reminder);
+        //createConnection(connection);
 
         fetchUser(user.getUUID());
         fetchPatient(patient.getUUID());
         fetchEvent(event.getTitle());
         fetchReminder(reminder.getTitle());
         fetchConnection(connection.getPersonID());
-
 
         // Create Timeline rows List
         ArrayList<TimelineRow> timelineRowsList = new ArrayList<>();
@@ -113,8 +115,6 @@ public class MainActivity extends ListActivity {
         myRow.setTitleColor(Color.argb(255, 0, 0, 0));
         // To set row Description text color (optional)
         myRow.setDescriptionColor(Color.argb(255, 0, 0, 0));
-
-        timelineRowsList.add(myRow);
 
         // Create the Timeline Adapter
         ArrayAdapter<TimelineRow> myAdapter = new TimelineViewAdapter(this, 0, timelineRowsList,
@@ -188,7 +188,6 @@ public class MainActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline_ui);
         myDialog = new Dialog(this);
-
 
     }
     /*
