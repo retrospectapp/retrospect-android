@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.FaceServiceRestClient;
@@ -21,7 +20,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -39,11 +37,10 @@ public class PersonIdentification extends AppCompatActivity{
     @BindView(R.id.button3) Button addPersonFace;
     @BindView(R.id.button4) Button displayDetails;
     @BindView(R.id.button5) Button identify_button;
-    @BindView(R.id.textView3) TextView tvname;
     @BindView(R.id.editText2) EditText group_name_text;
     @BindView(R.id.editText) EditText person_name_text;
-    private final int PICK_IMAGE = 1;
-    private final int CAMERA_REQUEST = 1000;
+    private final int IDENTIFY_REQUEST = 1000;
+    private final int ADD_FACE_REQUEST = 1001;
     private final String BTN_TAG = "BTN_PRESS";
 
     public void onCreate(Bundle savedInstanceState){
@@ -64,23 +61,19 @@ public class PersonIdentification extends AppCompatActivity{
         createPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    if(!group_name_text.getText().toString().equals("") && !person_name_text.getText().toString().equals("")){
+                if(!group_name_text.getText().toString().equals("") && !person_name_text.getText().toString().equals("")){
                         String group_name = group_name_text.getText().toString();
                         String person_name = person_name_text.getText().toString();
                         new CreatePerson().execute(generateID(group_name), person_name, null);
                 }
             }
         });
-        addPersonFace.setOnClickListener(new View.OnClickListener() {
+        addPersonFace.setOnClickListener(new View.OnClickListener()     {
             @Override
             public void onClick(View view) {
-                if(!group_name_text.getText().toString().equals("") && !person_name_text.getText().toString().equals("")){
-                    String group_ID = generateID(group_name_text.getText().toString());
-                    UUID person_ID = UUID.fromString(generateID(person_name_text.getText().toString()));
-                    String user_data = null; //fix
-                    FaceRectangle face = null; //fix
-                    String targetFace = null; //fix
-                    new AddPersonFace(group_ID,person_ID,user_data, targetFace, face).execute();
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(cameraIntent, ADD_FACE_REQUEST);
                 }
             }
         });
@@ -104,39 +97,64 @@ public class PersonIdentification extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(cameraIntent, IDENTIFY_REQUEST);
+                }
             }
         });
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO: Convert Intent data to InputStream!
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            if(data.getExtras()!=null) {
-                try{
+        if(data.getExtras()!=null) {
+            if (requestCode == IDENTIFY_REQUEST && resultCode == Activity.RESULT_OK) {
+                try {
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos );
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
                     byte[] bitmap_data = bos.toByteArray();
                     ByteArrayInputStream bs = new ByteArrayInputStream(bitmap_data);
-                    new detectFace(new detectFace.DetectFaceResponse(){
-                        void processFinished(Face[] faces){
+                    new detectFace(new detectFace.DetectFaceResponse() {
+                        public void processFinished(Face[] faces) {
+                            /*UUID[] faceIDs = new UUID[faces.length];
+                            for(int i = 0; i < faces.length; i++){
+                                faceIDs[i] = faces[i].faceId;
+                            }*/
                         }
                     }).execute(bs);
-                } catch(IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
+                }
+            } else if(requestCode == ADD_FACE_REQUEST && resultCode == Activity.RESULT_OK){
+                if(!group_name_text.getText().toString().equals("") && !person_name_text.getText().toString().equals("")){
+                    try {
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), data.getData());
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
+                        byte[] bitmap_data = bos.toByteArray();
+                        ByteArrayInputStream bs = new ByteArrayInputStream(bitmap_data);
+
+                        String group_ID = generateID(group_name_text.getText().toString());
+                        UUID person_ID = UUID.fromString(generateID(person_name_text.getText().toString()));
+                        String user_data = "";
+                        FaceRectangle targetFace = null;
+                        new AddPersonFace(group_ID, person_ID, bs, user_data, targetFace).execute();
+                    } catch(IOException e){
+                        e.printStackTrace();
+                    }
                 }
             }
         }
     }
 
-    public String generateID(String val){
-        char[] ch = val.toCharArray();
+    public String generateID(String ID){
+        // :param:
+        /*char[] ch = val.toCharArray();
         int sum = 0;
         for (char c : ch) {
             sum += c - 'A' + 1;
-        }
-        return String.valueOf(sum);
+        }*/
+        String val = "0"; //String.valueOf(sum);
+        return val;
     }
 
     static class detectFace extends AsyncTask<InputStream, String, Face[]> {
@@ -263,16 +281,16 @@ public class PersonIdentification extends AppCompatActivity{
                 new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
         String group_ID = null;
         UUID user_ID = null;
+        InputStream img = null;
         String user_data = null;
-        String target_face = null;
-        FaceRectangle face = null;
+        FaceRectangle target_face = null;
 
-        AddPersonFace(String group_ID, UUID user_ID, String user_data, String target_face, FaceRectangle face){
+        AddPersonFace(String group_ID, UUID user_ID, InputStream img, String user_data, FaceRectangle target_face){
             this.group_ID = group_ID;
             this.user_ID= user_ID;
+            this.img = img;
             this.user_data= user_data;
             this.target_face= target_face;
-            this.face= face;
         }
 
         @Override
@@ -282,13 +300,32 @@ public class PersonIdentification extends AppCompatActivity{
                 String persistedFaceID = faceServiceClient.addPersonFace(
                         this.group_ID,
                         this.user_ID,
+                        this.img,
                         this.user_data,
-                        this.target_face,
-                        this.face).toString();
-                publishProgress("Created Person with ID: " + persistedFaceID);
+                        this.target_face).toString();
+                publishProgress("Added face to Person with persistedFaceID: " + persistedFaceID);
                 return persistedFaceID;
             } catch (Exception e) {
-                publishProgress("Creation failed: " + e);
+                publishProgress("Addition failed: " + e);
+                return null;
+            }
+        }
+    }
+
+    static class TrainPersonGroup extends AsyncTask<String, String, String> {
+        private FaceServiceClient faceServiceClient =
+                new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                publishProgress("Training Person Group...");
+                faceServiceClient.trainPersonGroup(params[0]);
+                String trainingStatus = faceServiceClient.getPersonGroupTrainingStatus(params[0]).status.toString();
+                Log.d("API_RESPONSE", "Person Group Training Status for group with ID: "+  params[0] + " " + trainingStatus);
+                return "";
+            } catch (Exception e) {
+                Log.d("API_RESPONSE", "Could not train person group due to: " + e);
                 return null;
             }
         }
