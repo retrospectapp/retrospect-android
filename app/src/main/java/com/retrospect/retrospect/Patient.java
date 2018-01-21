@@ -1,10 +1,11 @@
-package com.example.shivamdave.retrospecttest;
+package com.retrospect.retrospect;
 
 /**
  * Created by Shivam on 1/18/2018.
+ *
  */
 
-public class Patient {
+public class Patient extends FaceRequests {
 
     private String fullName;
     private int age;

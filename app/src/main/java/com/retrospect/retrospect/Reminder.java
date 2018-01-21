@@ -1,7 +1,8 @@
-package com.example.shivamdave.retrospecttest;
+package com.retrospect.retrospect;
 
 /**
  * Created by Shivam on 1/19/2018.
+ * 
  */
 
 public class Reminder {

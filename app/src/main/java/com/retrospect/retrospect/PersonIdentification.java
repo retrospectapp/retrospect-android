@@ -116,7 +116,7 @@ public class PersonIdentification extends AppCompatActivity{
                     bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
                     byte[] bitmap_data = bos.toByteArray();
                     ByteArrayInputStream bs = new ByteArrayInputStream(bitmap_data);
-                    new detectFace(new detectFace.DetectFaceResponse() {
+                    new DetectFace(new DetectFace.DetectFaceResponse() {
                         public void processFinished(Face[] faces) {
                             UUID[] faceIDs = new UUID[faces.length];
                             for(int i = 0; i < faces.length; i++){
@@ -165,7 +165,7 @@ public class PersonIdentification extends AppCompatActivity{
         return val;
     }
 
-    static class detectFace extends AsyncTask<InputStream, String, Face[]> {
+    static class DetectFace extends AsyncTask<InputStream, String, Face[]> {
         private FaceServiceClient faceServiceClient =
                 new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0",
                         "068682577ef84250b24aafbc3b2c8e66");
@@ -175,7 +175,7 @@ public class PersonIdentification extends AppCompatActivity{
 
         private DetectFaceResponse detectFaceResponse = null;
 
-        private detectFace(DetectFaceResponse detectFaceResponse){
+        private DetectFace(DetectFaceResponse detectFaceResponse){
             this.detectFaceResponse = detectFaceResponse;
         }
 
