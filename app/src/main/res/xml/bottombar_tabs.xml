@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <tabs>
+        <tab
+            id="@+id/tab_events"
+            icon="@drawable/events"
+            title="Events" />
+        <tab
+            id="@+id/tab_connections"
+            icon="@drawable/connections"
+            title="Connections" />
+        <tab
+            id="@+id/tabs_id"
+            icon="@drawable/identify"
+            title="Identify" />
+        <tab
+            id="@+id/tab_reminders"
+            icon="@drawable/remind"
+            title="Reminders" />
+        <tab
+            id="@+id/tabs_profile"
+            icon="@drawable/profile"
+            title="Profile" />
+    </tabs>
+
+</PreferenceScreen>

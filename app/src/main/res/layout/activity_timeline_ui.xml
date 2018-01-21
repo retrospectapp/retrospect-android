@@ -10,25 +10,46 @@
         android:id="@+id/android:list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
         android:divider="@null"
-        android:dividerHeight="0dp" />
+        android:dividerHeight="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rela"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <!-- This could be your fragment container, or something -->
+        <FrameLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+
+        <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            app:bb_tabXmlResource="@xml/bottombar_tabs" />
+
+    </RelativeLayout>
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/floatingActionMenu"
         android:layout_width="190dp"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="65dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
         app:menu_backgroundColor="@android:color/transparent"
         app:menu_fab_label=""
         app:menu_fab_size="normal"
@@ -36,7 +57,8 @@
         app:menu_labels_colorPressed="@color/background"
         app:menu_labels_textColor="@color/colorText"
         app:menu_openDirection="up"
-        app:menu_showShadow="true">
+        app:menu_showShadow="true"
+        tools:ignore="NotSibling">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/peeps"
@@ -66,6 +88,13 @@
             app:fab_size="normal" />
 
     </com.github.clans.fab.FloatingActionMenu>
+
+
+
+
+
+
+
 
 
 </android.support.constraint.ConstraintLayout>

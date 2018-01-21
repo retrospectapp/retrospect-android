@@ -6,6 +6,7 @@ import android.app.ListActivity;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.IdRes;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,6 +20,8 @@ import java.util.Date;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 public class TimelineUI extends ListActivity {
     Dialog myDialog;
@@ -114,6 +117,22 @@ public class TimelineUI extends ListActivity {
             @Override
             public void onClick(View view) {
 
+            }
+        });
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                if (tabId == R.id.tab_connections) {
+                    // The tab with id R.id.tab_favorites was selected,
+                    // change your content accordingly.
+                }
+                if(tabId == R.id.tabs_id){
+
+                }
+                if(tabId == R.id.tabs_profile){
+
+                }
             }
         });
 
