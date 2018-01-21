@@ -1,16 +1,16 @@
 package com.retrospect.retrospect;
 
-import android.app.Activity;
+import android.app.Dialog;
 import android.app.ListActivity;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.qap.ctimelineview.TimelineRow;
@@ -19,12 +19,14 @@ import org.qap.ctimelineview.TimelineViewAdapter;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends ListActivity {
+public class TimelineUI extends ListActivity {
+    Dialog myDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);   //Some guy on stackoverflow told me I don't need this?
+        setContentView(R.layout.activity_timeline_ui);   //Some guy on stackoverflow told me I don't need this?
+        myDialog = new Dialog(this);
 
 
         // Create Timeline rows List
@@ -34,11 +36,11 @@ public class MainActivity extends ListActivity {
         TimelineRow myRow = new TimelineRow(0);
 
 // To set the row Date (optional)
-        myRow.setDate(new Date(25));  //(new Date());
+        myRow.setDate(new Date(0));  //(new Date());
 // To set the row Title (optional)
         myRow.setTitle("Met with contact: Bob Ross");
 // To set the row Description (optional)
-        myRow.setDescription("Description");
+        myRow.setDescription("description (string)");
 // To set the row bitmap image (optional)
         myRow.setImage(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
 // To set row Below Line Color (optional)
@@ -87,10 +89,25 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int pos, long id) {
         super.onListItemClick(l, v, pos, id);
-
-        // TODO : Logic
-
-        Toast.makeText(getApplicationContext(), "Position" + pos + "\nID? " + id + "\n" + l,
-                Toast.LENGTH_LONG).show();
+        this.ShowPopup(getListView(), pos);//TODO PLAN: have an array of event details (each index is an event), associate 'id' with index
     }
+
+    public void ShowPopup(View v, int index) {
+        TextView txtclose;
+        myDialog.setContentView(R.layout.details_popup);
+        txtclose =(TextView) myDialog.findViewById(R.id.txtclose);
+        txtclose.setText("X");
+        TextView placeholder;
+        placeholder =(TextView) myDialog.findViewById(R.id.indexPlaceholder);
+        placeholder.setText(index+"");
+        txtclose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+            }
+        });
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialog.show();
+    }
+
 }
