@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -313,8 +314,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void deletePatient(String userID){
 
         mProfileImagesRef.child(userID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -432,7 +431,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchEvents(){
 
+        mPatientEventRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (DocumentSnapshot document: task.getResult()){
+                        //Do something//
+                    }
+                }
+            }
+        });
+    }
 
     private void deleteEvent(String eventTitle){
 
@@ -527,7 +538,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchReminders(){
 
+        mPatientReminderRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (DocumentSnapshot document: task.getResult()){
+                        //Do something//
+                    }
+                }
+            }
+        });
+    }
 
     private void deleteReminder(String title){
 
@@ -606,6 +629,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(CONTAG, "Unable to fetch connection", e);
+            }
+        });
+    }
+
+    private void fetchConnections(){
+
+        mPatientConnectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (DocumentSnapshot document: task.getResult()){
+                        //Do something//
+                    }
+                }
             }
         });
     }
