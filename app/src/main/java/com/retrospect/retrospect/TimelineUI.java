@@ -22,8 +22,6 @@ import com.github.clans.fab.FloatingActionMenu;
 
 public class TimelineUI extends ListActivity {
     Dialog myDialog;
-
-
     FloatingActionMenu fam;
     FloatingActionButton people, event, reminder;
 
@@ -35,39 +33,38 @@ public class TimelineUI extends ListActivity {
         setContentView(R.layout.activity_timeline_ui);   //Some guy on stackoverflow told me I don't need this?
         myDialog = new Dialog(this);
 
-
         // Create Timeline rows List
         ArrayList<TimelineRow> timelineRowsList = new ArrayList<>();
 
         // Create new timeline row (Row Id)
         TimelineRow myRow = new TimelineRow(0);
 
-// To set the row Date (optional)
+        // To set the row Date (optional)
         myRow.setDate(new Date(0));  //(new Date());
-// To set the row Title (optional)
+        // To set the row Title (optional)
         myRow.setTitle("Met with contact: Bob Ross");
-// To set the row Description (optional)
+        // To set the row Description (optional)
         myRow.setDescription("description (string)");
-// To set the row bitmap image (optional)
+        // To set the row bitmap image (optional)
         myRow.setImage(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-// To set row Below Line Color (optional)
+        // To set row Below Line Color (optional)
         myRow.setBellowLineColor(Color.argb(255, 0, 0, 0));
-// To set row Below Line Size in dp (optional)
+        // To set row Below Line Size in dp (optional)
         myRow.setBellowLineSize(6);
-// To set row Image Size in dp (optional)
+        // To set row Image Size in dp (optional)
         myRow.setImageSize(40);
-// To set background color of the row image (optional)
+        // To set background color of the row image (optional)
         myRow.setBackgroundColor(Color.argb(255, 0, 0, 0));
-// To set the Background Size of the row image in dp (optional)
+        // To set the Background Size of the row image in dp (optional)
         myRow.setBackgroundSize(60);
-// To set row Date text color (optional)
+        // To set row Date text color (optional)
         myRow.setDateColor(Color.argb(255, 0, 0, 0));
-// To set row Title text color (optional)
+        // To set row Title text color (optional)
         myRow.setTitleColor(Color.argb(255, 0, 0, 0));
-// To set row Description text color (optional)
+        // To set row Description text color (optional)
         myRow.setDescriptionColor(Color.argb(255, 0, 0, 0));
 
-// Add the new row to the list
+        // Add the new row to the list
         timelineRowsList.add(myRow);
         timelineRowsList.add(myRow);
         timelineRowsList.add(myRow);
@@ -107,6 +104,8 @@ public class TimelineUI extends ListActivity {
         people.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
 
             }
         });

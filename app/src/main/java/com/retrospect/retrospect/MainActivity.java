@@ -1,14 +1,20 @@
 package com.retrospect.retrospect;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
+import android.app.Dialog;
+import android.app.ListActivity;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,11 +25,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
+import org.qap.ctimelineview.TimelineRow;
+import org.qap.ctimelineview.TimelineViewAdapter;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.Date;
+
+public class MainActivity extends ListActivity {
 
     public static final String TAG = "InspiringQuote";
     public static final String USERTAG = "UserData";
@@ -52,7 +61,10 @@ public class MainActivity extends AppCompatActivity {
     private StorageReference mProfileImagesRef = FirebaseStorage.getInstance().getReference().child("profileImages");
     private StorageReference mEventImagesRef = FirebaseStorage.getInstance().getReference().child("eventImages");
 
-    ImageView imageView = findViewById(R.id.profileImageView);
+    private Dialog myDialog;
+    private FloatingActionMenu fam;
+    private FloatingActionButton people_button, event_button, reminder_button;
+    //ImageView imageView = findViewById(R.id.profileImageView);
 
     @Override
     protected void onStart(){
@@ -60,10 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         createUser(user);
         createPatient(patient);
-        createEvent(event);
+        //createEvent(event);
         createReminder(reminder);
         createConnection(connection);
-
 
         fetchUser(user.getUUID());
         fetchPatient(patient.getUUID());
@@ -71,27 +82,121 @@ public class MainActivity extends AppCompatActivity {
         fetchReminder(reminder.getTitle());
         fetchConnection(connection.getPersonID());
 
+
+        // Create Timeline rows List
+        ArrayList<TimelineRow> timelineRowsList = new ArrayList<>();
+
+        // Create new timeline row (Row Id)
+        TimelineRow myRow = new TimelineRow(0);
+
+        // To set the row Date (optional)
+        myRow.setDate(new Date(0));  //(new Date());
+        // To set the row Title (optional)
+        myRow.setTitle("Met with contact: Bob Ross");
+        // To set the row Description (optional)
+        myRow.setDescription("description (string)");
+        // To set the row bitmap image (optional)
+        myRow.setImage(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+        // To set row Below Line Color (optional)
+        myRow.setBellowLineColor(Color.argb(255, 0, 0, 0));
+        // To set row Below Line Size in dp (optional)
+        myRow.setBellowLineSize(6);
+        // To set row Image Size in dp (optional)
+        myRow.setImageSize(40);
+        // To set background color of the row image (optional)
+        myRow.setBackgroundColor(Color.argb(255, 0, 0, 0));
+        // To set the Background Size of the row image in dp (optional)
+        myRow.setBackgroundSize(60);
+        // To set row Date text color (optional)
+        myRow.setDateColor(Color.argb(255, 0, 0, 0));
+        // To set row Title text color (optional)
+        myRow.setTitleColor(Color.argb(255, 0, 0, 0));
+        // To set row Description text color (optional)
+        myRow.setDescriptionColor(Color.argb(255, 0, 0, 0));
+
+        timelineRowsList.add(myRow);
+
+        // Create the Timeline Adapter
+        ArrayAdapter<TimelineRow> myAdapter = new TimelineViewAdapter(this, 0, timelineRowsList,
+                //if true, list will be sorted by date
+                false);
+
+        // Get the ListView and Bind it with the Timeline Adapter
+        ListView myListView = getListView();//(ListView) findViewById(R.id.lis);
+        myListView.setAdapter(myAdapter);
+
+//        setContentView(R.layout.activity_timeline_ui);
+
+        fam = (FloatingActionMenu) findViewById(R.id.floatingActionMenu);
+        people_button = (FloatingActionButton) findViewById(R.id.peeps);
+        event_button = (FloatingActionButton) findViewById(R.id.eve);
+        reminder_button = (FloatingActionButton) findViewById(R.id.remi);
+
+
+        event_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        people_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        reminder_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void onListItemClick(ListView l, View v, int pos, long id) {
+        super.onListItemClick(l, v, pos, id);
+        this.ShowPopup(getListView(), pos);//TODO PLAN: have an array of event details (each index is an event), associate 'id' with index
+    }
 
+    public void ShowPopup(View v, int index) {
+        TextView txtclose;
+        myDialog.setContentView(R.layout.details_popup);
+        txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
+        txtclose.setText("X");
+        TextView placeholder;
+        placeholder = (TextView) myDialog.findViewById(R.id.indexPlaceholder);
+        placeholder.setText(index + "");
+        txtclose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDialog.dismiss();
+            }
+        });
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialog.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_timeline_ui);
+        myDialog = new Dialog(this);
 
 
     }
-
-
-
+    /*
     private void loadUserProfileImage(String userID){
         Glide.with(this).load(mProfileImagesRef.child(userID)).into(imageView);
-    }
-
+    }*/
 
     private void createUser(User user){
-
         mUserRef.document(user.getUUID()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -104,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void fetchUser(String userID){
 
@@ -127,7 +231,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void deleteUser(String userID){
 
@@ -168,10 +271,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
+    /*
     private void loadPatientProfileImage(String userID){
         Glide.with(this).load(mProfileImagesRef.child(userID)).into(imageView);
-    }
+    }*/
 
 
     private void createPatient(Patient patient){
@@ -188,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void fetchPatient(String userID){
 
@@ -210,8 +312,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void deletePatient(String userID){
 
@@ -252,11 +352,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-    private void loadEventImage(String eventTitle){
+    /*private void loadEventImage(String eventTitle){
         Glide.with(this).load(mEventImagesRef.child(patient.getUUID()).child(eventTitle)).into(imageView);
     }
-
 
     private void createEvent(final Event event){
 
@@ -306,8 +404,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.w(EVENTTAG, "Failed to create event for patient",e);
             }
         });
-    }
-
+    }*/
 
     private void fetchEvent(String eventTitle){
 
@@ -330,7 +427,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void fetchEvents(){
 
         mPatientEventRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -344,7 +440,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void deleteEvent(String eventTitle){
 
@@ -386,7 +481,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void createReminder(Reminder reminder){
 
         mUserReminderRef.document(reminder.getTitle()).set(reminder).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -415,8 +509,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void fetchReminder(String title){
 
         mUserReminderRef.document(title).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -438,7 +530,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void fetchReminders(){
 
         mPatientReminderRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -452,7 +543,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void deleteReminder(String title){
 
@@ -482,7 +572,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void createConnection(final Connection connection){
 
         mUserConnectionRef.document(connection.getPersonID()).set(connection).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -510,7 +599,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void fetchConnection(String personID){
 
         mPatientConnectionRef.document(personID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -532,7 +620,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void fetchConnections(){
 
         mPatientConnectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -546,7 +633,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void deleteConnection(String personID){
 
