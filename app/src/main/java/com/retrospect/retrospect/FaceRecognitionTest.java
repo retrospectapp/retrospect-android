@@ -26,7 +26,6 @@ public class FaceRecognitionTest extends AppCompatActivity {
     FaceServiceClient faceServiceClient =
             new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0", "068682577ef84250b24aafbc3b2c8e66");
     private final int PICK_IMAGE = 1;
-    private ProgressDialog detectionProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,6 @@ public class FaceRecognitionTest extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(gallIntent, "Select Picture"), PICK_IMAGE);
             }
         });
-        detectionProgressDialog = new ProgressDialog(this);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -67,7 +65,6 @@ public class FaceRecognitionTest extends AppCompatActivity {
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
         ByteArrayInputStream inputStream =
                 new ByteArrayInputStream(outputStream.toByteArray());
-
 
         new detectFace().execute(inputStream);
     }

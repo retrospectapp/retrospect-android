@@ -24,6 +24,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
+            android:paddingHorizontal="15dp"
+            android:textAlignment="center"
+            android:id="@+id/titleText"
             android:textColor="@android:color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,6 +36,8 @@
             android:layout_gravity="center_horizontal"
             />
         <TextView
+            android:id="@+id/dateText"
+            android:paddingHorizontal="15dp"
             android:textColor="#878787"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,20 +52,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:gravity="center"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="100dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
-        </LinearLayout>
         <LinearLayout
             android:gravity="center"
             android:orientation="vertical"
@@ -68,9 +60,10 @@
             android:layout_width="0dp"
             android:layout_height="100dp">
             <TextView
+                android:textAlignment="center"
                 android:textColor="@android:color/white"
                 android:text="QQQ"
-                android:id="@+id/indexPlaceholder"
+                android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
@@ -86,14 +79,6 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:textColor="@android:color/white"
-            android:layout_gravity="center_horizontal"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="descriptiondescriptiondescriptiondescriptiondescriptiondescriptiondescription"
-            android:textSize="18sp" />
     </LinearLayout>
 
 

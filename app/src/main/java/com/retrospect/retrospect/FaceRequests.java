@@ -18,14 +18,16 @@ import java.util.Locale;
 import java.util.UUID;
 
 /**
- * Created by Shreyas on 1/18/2018.
- *
+ * Created by Shreyas Niradi on 1/18/2018
+ * Implements the Face API through Asynchronous tasks
  */
 
 public abstract class FaceRequests {
+
     private FaceServiceClient faceServiceClient =
             new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0",
                     "068682577ef84250b24aafbc3b2c8e66");
+
     Face[] detectFace(InputStream imageStream, boolean returnFaceId, boolean returnFaceLandmarks, FaceServiceClient.FaceAttributeType[] returnFaceAttributes) throws ClientException, IOException {
         try{
             return faceServiceClient.detect(imageStream,returnFaceId, returnFaceLandmarks, returnFaceAttributes);
@@ -64,6 +66,7 @@ public abstract class FaceRequests {
             e.printStackTrace();
         }
     }
+
     /*
     * TODO: Update all the Asynchronous tasks - reroute data so that it can be returned in abstract methods
     * */
