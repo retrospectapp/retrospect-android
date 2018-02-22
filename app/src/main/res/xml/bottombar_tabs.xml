@@ -3,6 +3,10 @@
 
     <tabs>
         <tab
+            id="@+id/tab_reminders"
+            icon="@drawable/remind"
+            title="Reminders" />
+        <tab
             id="@+id/tab_events"
             icon="@drawable/events"
             title="Events" />
@@ -14,10 +18,7 @@
             id="@+id/tabs_id"
             icon="@drawable/identify"
             title="Identify" />
-        <tab
-            id="@+id/tab_reminders"
-            icon="@drawable/remind"
-            title="Reminders" />
+
         <tab
             id="@+id/tabs_profile"
             icon="@drawable/profile"

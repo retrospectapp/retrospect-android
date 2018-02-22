@@ -1,5 +1,6 @@
 package com.retrospect.retrospect;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -22,6 +23,8 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+
+import mehdi.sakout.aboutpage.AboutPage;
 
 public class TimelineUI extends ListActivity {
     Dialog myDialog;
@@ -124,14 +127,13 @@ public class TimelineUI extends ListActivity {
             @Override
             public void onTabSelected(@IdRes int tabId) {
                 if (tabId == R.id.tab_connections) {
-                    // The tab with id R.id.tab_favorites was selected,
-                    // change your content accordingly.
+                    startActivity(new Intent(TimelineUI.this, connectionsAccount.class));
                 }
                 if(tabId == R.id.tabs_id){
-
+                    startActivity(new Intent(TimelineUI.this, identifyPerson.class));
                 }
                 if(tabId == R.id.tabs_profile){
-
+                    startActivity(new Intent(TimelineUI.this, profileAccount.class));
                 }
             }
         });
@@ -153,7 +155,7 @@ public class TimelineUI extends ListActivity {
         txtclose = (TextView) myDialog.findViewById(R.id.txtclose);
         txtclose.setText("X");
         TextView placeholder;
-        placeholder = (TextView) myDialog.findViewById(R.id.indexPlaceholder);
+        placeholder = (TextView) myDialog.findViewById(R.id.editText2);
         placeholder.setText(index + "");
         txtclose.setOnClickListener(new View.OnClickListener() {
             @Override

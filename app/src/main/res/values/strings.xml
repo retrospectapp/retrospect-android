@@ -3,4 +3,5 @@
     <string name="person">Add People</string>
     <string name="event">Add Event</string>
     <string name="reminder">Add Reminder</string>
+    <string name="title_activity_identity_person">identityPerson</string>
 </resources>

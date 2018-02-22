@@ -3,7 +3,8 @@
     package="com.retrospect.retrospect">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-feature android:name="android.hardware.camera2"/>
+
+    <uses-feature android:name="android.hardware.camera2" />
 
     <application
         android:allowBackup="true"
@@ -12,25 +13,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--<activity android:name=".TimelineUI">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-            <!--</intent-filter>-->
-        <!--</activity>-->
-        <activity android:name=".MainActivity">
+        <!-- <activity android:name=".TimelineUI"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
 
+
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <activity android:name=".MainActivity" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".TimelineUI">
-
-        </activity>
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".TimelineUI" />
+        <activity android:name=".profileAccount" />
+        <activity android:name=".connectionsAccount" />
+        <activity android:name=".identifyPerson"></activity>
     </application>
 
 </manifest>
