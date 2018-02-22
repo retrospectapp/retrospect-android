@@ -1,0 +1,62 @@
+    /*
+    public static final String AUTHOR_KEY = "author";
+    public static final String QUOTE_KEY = "quote";
+
+    TextView mQuoteTextView;
+
+    private CollectionReference root = FirebaseFirestore.getInstance().collection("sampleData");
+
+    private DocumentReference mDocRef = FirebaseFirestore.getInstance().document("sampleData/inspiration");
+
+    public void deleteDocument(String docName){
+
+        root.document(docName).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(DELTAG, "Deletion was successful!");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(DELTAG, "Deletion was unsuccessful", e);
+            }
+        });
+    }
+
+    public void writeToDatabase(){
+        String quoteText = "You either a die hero, or you live long enough to see yourself become the villain";
+        String authorText = "Harvey Dent";
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put(QUOTE_KEY, quoteText);
+        map.put(AUTHOR_KEY, authorText);
+        mDocRef.set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Document has been saved!");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Document was not saved!", e);
+            }
+        });
+    }
+
+    private void readFromDatabase(){
+        mDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    String quoteText = documentSnapshot.getString(QUOTE_KEY);
+                    String authorText = documentSnapshot.getString(AUTHOR_KEY);
+
+                    Map<String, Object> map = documentSnapshot.getData();
+
+                    mQuoteTextView.setText(quoteText + authorText);
+                }
+            }
+        });
+    }
+
+    */

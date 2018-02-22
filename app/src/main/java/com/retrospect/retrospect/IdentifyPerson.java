@@ -1,7 +1,6 @@
 package com.retrospect.retrospect;
 
 
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +17,7 @@ import com.microsoft.projectoxford.face.contract.*;
 import android.speech.tts.TextToSpeech;
 import java.util.Locale;
 
-public class identifyPerson extends AppCompatActivity {
+public class IdentifyPerson extends AppCompatActivity {
 
     TextToSpeech t1;
     FaceServiceClient faceServiceClient =
@@ -140,7 +139,7 @@ public class identifyPerson extends AppCompatActivity {
                         imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                startActivity(new Intent(identifyPerson.this, connectionsAccount.class));
+                                startActivity(new Intent(IdentifyPerson.this, ConnectionsAccount.class));
                             }
                         });
                         imageView.setImageBitmap(drawFaceRectanglesOnBitmap(imageBitmap, result));

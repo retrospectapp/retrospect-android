@@ -140,7 +140,6 @@ public class PersonIdentification extends AppCompatActivity{
                         bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
                         byte[] bitmap_data = bos.toByteArray();
                         ByteArrayInputStream bs = new ByteArrayInputStream(bitmap_data);
-
                         String group_ID = generateID(group_name_text.getText().toString());
                         UUID person_ID = UUID.fromString(generateID(person_name_text.getText().toString()));
                         String user_data = "";
