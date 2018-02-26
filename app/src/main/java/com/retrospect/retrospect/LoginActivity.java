@@ -11,28 +11,34 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.credentials.Credential;
+import com.google.android.gms.auth.api.credentials.CredentialRequest;
+import com.google.android.gms.auth.api.credentials.CredentialRequestResponse;
+import com.google.android.gms.auth.api.credentials.Credentials;
+import com.google.android.gms.auth.api.credentials.CredentialsClient;
+import com.google.android.gms.auth.api.credentials.IdentityProviders;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 
 public class LoginActivity extends AppCompatActivity {
 
-    SignInButton button;
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
     private final static int RC_SIGN_IN =2;
-    GoogleApiClient mGoogleApiClient;
-    FirebaseAuth.AuthStateListener mAuthListener;
+    private GoogleApiClient mGoogleApiClient;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onStart() {
@@ -45,8 +51,25 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
-        button = (SignInButton) findViewById(R.id.googleBtn);
+        SignInButton button = findViewById(R.id.googleBtn);
         mAuth = FirebaseAuth.getInstance();
+        CredentialsClient mCredentialsClient = Credentials.getClient(this);
+        CredentialRequest mCredentialRequest = new CredentialRequest.Builder()
+                .setPasswordLoginSupported(true)
+                .setAccountTypes(IdentityProviders.GOOGLE)
+                .build();
+
+        mCredentialsClient.request(mCredentialRequest).addOnCompleteListener(new OnCompleteListener<CredentialRequestResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<CredentialRequestResponse> task) {
+                if(task.isSuccessful()){
+                    Log.d("GOOG_SIGN_IN","Credential retrieval successful");
+                    onCredentialReceived(task.getResult().getCredential());
+                }else{
+                    Log.d("GOOG_SIGN_IN", "Credential retrieval failed");
+                }
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() != null){
-                    startActivity(new Intent(LoginActivity.this, TimelineUI.class));
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
             }
         };
@@ -80,11 +103,6 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
     }
 
-//    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestIdToken(getString(R.string.default_web_client_id))
-//            .requestEmail()
-//            .build();
-
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -96,36 +114,63 @@ public class LoginActivity extends AppCompatActivity {
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if(result.isSuccess()){
-                GoogleSignInAccount account = result.getSignInAccount();
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
-            }
-            else{
-                Toast.makeText(LoginActivity.this, "Auth went wrong", Toast.LENGTH_SHORT).show();
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.d("GOOG_SIGN_IN", "Sign in failed", e);
             }
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                        if (task.isSuccessful()) {  // Sign in success, update UI with the signed-in user's information
+                            Log.d("GOOG_SIGN_IN", "signInWithCredential:success");
+                            CredentialsClient mCredentialsClient = Credentials.getClient(getParent());
+                            Credential cred = new Credential.Builder(account.getEmail())
+                                    .setAccountType(IdentityProviders.GOOGLE)
+                                    .setName(account.getDisplayName())
+                                    .setProfilePictureUri(account.getPhotoUrl())
+                                    .build();
+                            mCredentialsClient.save(cred);
                         }
                         else {
                             // If sign in fails, display a message to the user.
-                            Log.w("Tag", "signInWithCredential:failure", task.getException());
+                            Log.d("GOOG_SIGN_IN", "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
+    private void onCredentialReceived(Credential credential) throws NullPointerException{
+        String accountType = credential.getAccountType();
+        if(accountType == null) {
+          Log.d("CRED","Account type is null");
+        } else if (accountType.equals(IdentityProviders.GOOGLE)) {
+            // The user has previously signed in with Google Sign-In. Silently
+            // sign in the user with the same ID.
+            // See https://developers.google.com/identity/sign-in/android/
+            GoogleSignInOptions gso =
+                    new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestEmail()
+                            .build();
 
-
+            GoogleSignInClient signInClient = GoogleSignIn.getClient(this, gso);
+            Task<GoogleSignInAccount> task = signInClient.silentSignIn();
+            task.addOnCompleteListener(new OnCompleteListener<GoogleSignInAccount>() {
+                @Override
+                public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
+                    Log.d("GOOG_SILENT_SIGN_IN", "Silent sign in successful");
+                }
+            });
+        }
+    }
 }
