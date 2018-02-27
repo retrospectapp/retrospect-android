@@ -30,10 +30,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,11 +41,13 @@ public class LoginActivity extends AppCompatActivity {
     private final static int RC_SIGN_IN =2;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    private GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
     }
 
     @Override
@@ -54,8 +56,18 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_activity);
 
         SignInButton button = findViewById(R.id.googleBtn);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         mAuth = FirebaseAuth.getInstance();
+
         CredentialsClient mCredentialsClient = Credentials.getClient(this);
+
         CredentialRequest mCredentialRequest = new CredentialRequest.Builder()
                 .setPasswordLoginSupported(true)
                 .setAccountTypes(IdentityProviders.GOOGLE)
@@ -68,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.d("GOOG_SIGN_IN","Credential retrieval successful");
                     onCredentialReceived(task.getResult().getCredential());
                 } else{
-                    Log.d("GOOG_SIGN_IN", "Credential retrieval failed");
+                    Log.d("GOOG_SIGN_IN", "Credential retrieval unsuccessful", task.getException());
                 }
             }
         });
@@ -89,11 +101,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
@@ -106,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
@@ -151,8 +158,8 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-
-                            findAccountType(account);
+                            FirebaseUser currentUser = mAuth.getCurrentUser();
+                            updateUI(currentUser);
                         }
                         else {
                             // If sign in fails, display a message to the user.
@@ -180,16 +187,28 @@ public class LoginActivity extends AppCompatActivity {
             task.addOnCompleteListener(new OnCompleteListener<GoogleSignInAccount>() {
                 @Override
                 public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-                    Log.d("SILENT_SIGN_IN", "Silent sign in successful");
+                    if(task.isSuccessful()) {
+                        Log.d("SILENT_SIGN_IN", "Silent sign in successful");
+                        firebaseAuthWithGoogle(task.getResult());
+                    } else{
+                        Log.d("SILENT_SIGN_IN","Silent sign in unsuccessful", task.getException());
+                    }
                 }
             });
         }
     }
 
-    private void findAccountType(GoogleSignInAccount account){
-        String uid = account.getId();
+    private void updateUI(FirebaseUser account){
+        boolean patient = false;
+        String uid = account.getUid();
         // Query the Users collection for this ID and return user type
         CollectionReference mUserRef = FirebaseFirestore.getInstance().collection("sampleData/Users/Accounts");
+        int type = (patient) ? 1 : 0;
+        switch(type){
+            case 0:
+                //set UI to caretaker UI
+            case 1:
+                //set UI to patient UI
+        }
     }
-
 }
