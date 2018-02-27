@@ -31,6 +31,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -65,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Log.d("GOOG_SIGN_IN","Credential retrieval successful");
                     onCredentialReceived(task.getResult().getCredential());
-                }else{
+                } else{
                     Log.d("GOOG_SIGN_IN", "Credential retrieval failed");
                 }
             }
@@ -96,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(LoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Connection Failed", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
@@ -140,7 +142,17 @@ public class LoginActivity extends AppCompatActivity {
                                     .setName(account.getDisplayName())
                                     .setProfilePictureUri(account.getPhotoUrl())
                                     .build();
-                            mCredentialsClient.save(cred);
+                            mCredentialsClient.save(cred).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d("CRED", "SAVE: OK");
+                                        Toast.makeText(getParent(), "Credentials saved", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+                            findAccountType(account);
                         }
                         else {
                             // If sign in fails, display a message to the user.
@@ -168,9 +180,16 @@ public class LoginActivity extends AppCompatActivity {
             task.addOnCompleteListener(new OnCompleteListener<GoogleSignInAccount>() {
                 @Override
                 public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-                    Log.d("GOOG_SILENT_SIGN_IN", "Silent sign in successful");
+                    Log.d("SILENT_SIGN_IN", "Silent sign in successful");
                 }
             });
         }
     }
+
+    private void findAccountType(GoogleSignInAccount account){
+        String uid = account.getId();
+        // Query the Users collection for this ID and return user type
+        CollectionReference mUserRef = FirebaseFirestore.getInstance().collection("sampleData/Users/Accounts");
+    }
+
 }
