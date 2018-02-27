@@ -14,11 +14,11 @@ public class User extends FaceRequests {
     private String patientID;
     private String emailID;
     private String imageURL;
-
+    private boolean isPatient;
     public User() {
     }
 
-    public User(String fullName, int age, String uuid, String personID, String patientID, String emailID, String imageURL) {
+    public User(String fullName, int age, String uuid, String personID, String patientID, String emailID, String imageURL, boolean isPatient) {
         this.fullName = fullName;
         this.age = age;
         this.uuid = uuid;
@@ -26,6 +26,7 @@ public class User extends FaceRequests {
         this.patientID = patientID;
         this.emailID = emailID;
         this.imageURL = imageURL;
+        this.isPatient = isPatient;
     }
 
 
@@ -83,6 +84,14 @@ public class User extends FaceRequests {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    public boolean getIsPatient() {
+        return isPatient;
+    }
+
+    public void setIsPatient(boolean isPatient) {
+        this.isPatient = isPatient;
     }
 
     public String toString() {

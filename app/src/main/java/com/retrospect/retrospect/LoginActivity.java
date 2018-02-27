@@ -26,6 +26,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -33,6 +34,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
@@ -92,14 +95,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        /*mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() != null){
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 }
             }
-        };
+        };*/
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
@@ -199,16 +202,26 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser account){
-        boolean patient = false;
-        String uid = account.getUid();
-        // Query the Users collection for this ID and return user type
-        CollectionReference mUserRef = FirebaseFirestore.getInstance().collection("sampleData/Users/Accounts");
-        int type = (patient) ? 1 : 0;
-        switch(type){
-            case 0:
-                //set UI to caretaker UI
-            case 1:
-                //set UI to patient UI
+        if(account != null){
+            Intent login = new Intent(LoginActivity.this, MainActivity.class);
+            String uid = account.getUid();
+            Bundle accountInfo = new Bundle();
+            accountInfo.putString("uid", uid);
+            // Query the Users collection for this ID and return user type
+            accountInfo.putBoolean("type", isPatient(uid));
+            login.putExtras(accountInfo);
         }
+    }
+
+    private boolean isPatient(String uid){
+        //change DocumentReference from sampleData once in production
+        DocumentReference userRef = FirebaseFirestore.getInstance().collection("sampleData/Users/Accounts").document(uid);
+        User currentUser = userRef.get().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("ACC_TYPE", "Could not retrieve document snapshot", e);
+            }
+        }).getResult().toObject(User.class);
+        return currentUser.getIsPatient();
     }
 }
