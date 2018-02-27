@@ -41,7 +41,7 @@ public class MainActivity extends ListActivity {
 
     // TODO: Replace these with dynamic current user values from Firebase
     // ----------------------------------------------------------------------
-    private User user = new User("Shivam Dave", 19, "abcd123", "a1b2c3", "1518732", "shivam.dave@gmail.com", "");
+    private User user = new User("Shivam Dave", 19, "abcd123", "a1b2c3", "1518732", "shivam.dave@gmail.com", "", false);
     private Patient patient = new Patient("Shreyas Niradi", 19, "efg456", "1606197", "shreyas.niradi@gmail.com", "");
     private Event event = new Event("CalHacks 4.0", "10/7/17", "We were awarded for Best Use of Microsoft Services", "UC Davis", null, "");
     private Reminder reminder = new Reminder("HackDavis 2018", "1/20/18", "11:00", "AM", "Get hyped and grind");

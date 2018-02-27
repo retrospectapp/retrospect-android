@@ -42,13 +42,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private final static int RC_SIGN_IN =2;
-    private GoogleApiClient mGoogleApiClient;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private GoogleSignInClient mGoogleSignInClient;
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
@@ -95,16 +92,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        /*mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser() != null){
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                }
-            }
-        };*/
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
