@@ -12,12 +12,12 @@ import com.retrospect.retrospect.R;
 import com.retrospect.retrospect.model.*;
 import com.retrospect.retrospect.utils.DateTimeUtils;
 import com.retrospect.retrospect.utils.VectorDrawableUtils;
-import com.retrospect.retrospect.TimeLineActivity;
+import com.retrospect.retrospect.MainActivity;
 
 import java.util.List;
 
 /**
- * Created by HP-HP on 05-12-2015.
+ * Created by nithin.
  */
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 

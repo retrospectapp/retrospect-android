@@ -41,6 +41,7 @@ dependencies {
 
     compile 'de.hdodenhof:circleimageview:2.2.0' //TODO not needed
     compile 'com.github.vipulasri:timelineview:1.0.6'
+    compile 'com.sothree.slidinguppanel:library:3.4.0'
 
 
 }

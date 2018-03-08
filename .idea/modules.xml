@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/retrospect-android.iml" filepath="$PROJECT_DIR$/retrospect-android.iml" />
+      <module fileurl="file://C:\Users\nithin\Desktop\retrospect\retrospect-android\retrospect-android.iml" filepath="C:\Users\nithin\Desktop\retrospect\retrospect-android\retrospect-android.iml" />
     </modules>
   </component>
 </project>

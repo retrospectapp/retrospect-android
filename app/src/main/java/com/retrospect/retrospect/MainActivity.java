@@ -8,6 +8,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -28,7 +30,7 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "InspiringQuote";
     public static final String USERTAG = "UserData";
@@ -103,6 +105,9 @@ public class MainActivity extends ListActivity {
         peopleButton = (FloatingActionButton) findViewById(R.id.peeps);
         eventButton = (FloatingActionButton) findViewById(R.id.eve);
         reminderButton = (FloatingActionButton) findViewById(R.id.remi);
+        //Timeline Fragment -nithin 3/7/2018
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().add(R.id.FragmentContainer,new TimelineFragment()).commit();
 
 
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
