@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private final int RC_SIGN_IN = 1;
     private final String TAG = "FIRE_AUTH";
+
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
@@ -91,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            //createFirebaseUser(user);
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -100,6 +102,19 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    /*private void createFirebaseUser(FirebaseUser user) {
+        //put code for first time user here
+        if(!userExists(user)){
+            // code to create user within firestore using user uid
+
+        }
+    }
+
+    private boolean userExists(FirebaseUser user) {
+        //code to query users for user
+        return false;
+    }*/
 
     private void updateUI(FirebaseUser account){
         if(account != null){
