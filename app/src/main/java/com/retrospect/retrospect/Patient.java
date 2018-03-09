@@ -5,7 +5,7 @@ package com.retrospect.retrospect;
  *
  */
 
-public class Patient extends FaceRequests {
+public class Patient {
 
     private String fullName;
     private int age;

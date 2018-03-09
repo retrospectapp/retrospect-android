@@ -5,7 +5,7 @@ package com.retrospect.retrospect;
  *
  */
 
-public class Connection extends FaceRequests{
+public class Connection{
 
     private String fullName;
     private String userID;
