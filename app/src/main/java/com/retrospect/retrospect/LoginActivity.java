@@ -34,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         SignInButton button = findViewById(R.id.googleBtn);
+        button.setSize(SignInButton.SIZE_WIDE);
+        button.setColorScheme(SignInButton.COLOR_DARK);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
