@@ -3,7 +3,8 @@
     android:layout_height="match_parent" android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp" tools:context=".FaceRecognitionTest">
+    android:paddingBottom="10dp"
+    tools:context=".FaceRecognitionTest">
 
     <ImageView
         android:layout_width="match_parent"

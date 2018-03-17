@@ -4,15 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.retrospect.retrospect.LoginActivity"
-    android:background="@color/about_instagram_color">
+    android:background="@drawable/login_background">
+
+    <ImageView
+        android:contentDescription="@string/app_name"
+        android:id="@+id/imageView3"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="106dp"
+        android:src="@drawable/login_logo2" />
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/googleBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/imageView3"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="75dp" />
-
-
+        android:layout_marginTop="113dp" />
 </RelativeLayout>

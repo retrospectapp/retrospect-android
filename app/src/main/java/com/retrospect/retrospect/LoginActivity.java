@@ -24,6 +24,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+@SuppressWarnings("unused")
 public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient googleSignInClient;
     private FirebaseAuth mAuth;
@@ -33,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+
         SignInButton button = findViewById(R.id.googleBtn);
         button.setSize(SignInButton.SIZE_WIDE);
         button.setColorScheme(SignInButton.COLOR_DARK);
@@ -56,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onStart(){
         super.onStart();
         FirebaseUser account = mAuth.getCurrentUser();
-        updateUI(account);
+        updateUI(account, false);
     }
 
     private void signIn(){
@@ -94,45 +96,40 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            //createFirebaseUser(user);
-                            updateUI(user);
+                            if(task.getResult().getAdditionalUserInfo().isNewUser()){
+                                updateUI(user, true);
+                                //createFirebaseUser(user);
+                            } else {
+                                updateUI(user, false);
+                            }
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.d(TAG, "signInWithCredential:failure", task.getException());
-                            updateUI(null);
+                            updateUI(null, false);
                         }
                     }
                 });
     }
 
-    /*private void createFirebaseUser(FirebaseUser user) {
-        //put code for first time user here
-        if(!userExists(user)){
-            // code to create user within firestore using user uid
-
-        }
-    }
-
-    private boolean userExists(FirebaseUser user) {
-        //code to query users for user
-        return false;
-    }*/
-
-    private void updateUI(FirebaseUser account){
+    private void updateUI(FirebaseUser account, boolean isNewUser){
         if(account != null){
-            Intent login = new Intent(LoginActivity.this, MainActivity.class);
+            Intent login;
+            if(isNewUser)
+                login = new Intent(LoginActivity.this, Registration.class);
+            else
+                login = new Intent(LoginActivity.this, MainActivity.class);
             String uid = account.getUid();
             Bundle accountInfo = new Bundle();
             accountInfo.putString("uid", uid);
             // Query the Users collection for this ID and return user type
-            accountInfo.putBoolean("type", isPatient(uid));
+            //accountInfo.putBoolean("type", isPatient(uid));
             login.putExtras(accountInfo);
         }
     }
 
     private boolean isPatient(String uid){
         //change DocumentReference from sampleData once in production
-        DocumentReference userRef = FirebaseFirestore.getInstance().collection("sampleData/Users/Accounts").document(uid);
+        DocumentReference userRef = FirebaseFirestore.getInstance().collection("Users/Accounts").document(uid);
         User currentUser = userRef.get().addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {

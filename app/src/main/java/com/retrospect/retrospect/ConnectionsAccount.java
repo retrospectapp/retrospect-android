@@ -22,7 +22,7 @@ public class ConnectionsAccount extends AppCompatActivity {
                     startActivity(new Intent(ConnectionsAccount.this, MainActivity.class));
                 }
                 if(tabId == R.id.tabs_id){
-                    startActivity(new Intent(ConnectionsAccount.this, IdentifyPerson.class));
+                    //startActivity(new Intent(ConnectionsAccount.this, IdentifyPerson.class));
                 }
                 if(tabId == R.id.tabs_profile){
                     startActivity(new Intent(ConnectionsAccount.this, ProfileAccount.class));
