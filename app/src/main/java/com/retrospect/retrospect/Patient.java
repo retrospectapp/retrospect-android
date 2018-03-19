@@ -5,57 +5,45 @@ package com.retrospect.retrospect;
  *
  */
 
+@SuppressWarnings("unused")
 public class Patient {
 
-    private String fullName;
+    private String firstName;
+    private String lastName;
     private int age;
-    private String uuid;
-    private String careTakerID;
     private String emailID;
     private String imageURL;
+    private static final boolean isPatient = true;
 
     public Patient(){}
 
-    public Patient(String fullName, int age, String uuid, String careTakerID, String emailID, String imageURL ){
-        this.fullName = fullName;
+    public Patient(String firstName, String lastName, int age, String emailID, String imageURL ){
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.age = age;
-        this.uuid = uuid;
-        this.careTakerID = careTakerID;
         this.emailID = emailID;
         this.imageURL = imageURL;
     }
 
-    public String getFullName(){
-        return fullName;
+    public String getFirstName(){
+        return firstName;
     }
 
-    public void setFullName(String fullName){
-        this.fullName = fullName;
+    public void setFirstName(String firstName){
+        this.firstName = firstName;
     }
+
+    public String getLastName() { return lastName; }
+
+    public void setLastName(String lastName){ this.lastName = lastName; }
+
+    public String getFullName() { return getFirstName() + " " + getLastName(); }
 
     public int getAge(){
         return age;
     }
 
-    public void setAge(int age){
-        this.age = age;
-    }
-
-    public String getUUID(){
-        return uuid;
-    }
-
-    public void setUUID(String uuid){
-        this.uuid = uuid;
-    }
-
-    public String getCareTakerID(){
-        return careTakerID;
-    }
-
-    public void setCareTakerID(String careTakerID){
-        this.careTakerID = careTakerID;
-    }
+    public void setAge(int age){ this.age = age; }
 
     public String getEmailID(){
         return emailID;
@@ -73,8 +61,7 @@ public class Patient {
         this.imageURL = imageURL;
     }
 
-    public String toString(){
-        return "Full Name: " + fullName + "\n" + "Age: " + age + "\n" + "UUID: " + uuid + "\n" + "CareTaker ID: " + careTakerID + "\n" + "Email ID" + emailID + "\n" + "Image URL: " + "\n";
-    }
+    public boolean getIsPatient() { return isPatient; }
+
 
 }

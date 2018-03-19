@@ -1,10 +1,13 @@
 package com.retrospect.retrospect;
 
+import java.util.ArrayList;
+
 /**
  * Created by Shivam on 1/19/2018.
- * 
+ *
  */
 
+@SuppressWarnings("unused")
 public class Reminder {
 
     private String title;
@@ -12,15 +15,19 @@ public class Reminder {
     private String time;
     private String period;
     private String details;
+    private String jingleAudioURL;
+    private ArrayList<String> imageURLs;
 
     public Reminder(){}
 
-    public Reminder(String title, String date, String time, String period, String details){
+    public Reminder(String title, String date, String time, String period, String details, String jingleAudioURL, ArrayList<String> imageURLS){
         this.title = title;
         this.date = date;
         this.time = time;
         this.period = period;
         this.details = details;
+        this.jingleAudioURL = jingleAudioURL;
+        this.imageURLs = imageURLS;
     }
 
     public String getTitle(){
@@ -63,6 +70,13 @@ public class Reminder {
         this.details = details;
     }
 
+    public String getJingleAudioURL() { return jingleAudioURL; }
+
+    public void setJingleAudioURL(String jingleAudioURL) { this.jingleAudioURL = jingleAudioURL; }
+
+    public ArrayList<String> getImageURLs() { return imageURLs; }
+
+    public void setImageURLs(ArrayList<String> imageURLs) { this.imageURLs = imageURLs; }
     public String toString(){
         return "Title: " + title + "\n" + "Date: " + date + "\n" + "Time: " + time + "\n" + "Period: " + period + "\n" + "Details: " + details + "\n";
     }

@@ -1,32 +1,30 @@
 package com.retrospect.retrospect;
 
+import com.google.firebase.firestore.DocumentReference;
+
 /**
  * Created by Shivam on 1/19/2018.
  *
  */
 
-public class Connection{
 
-    private String fullName;
-    private String userID;
+@SuppressWarnings("unused")
+public class Connection {
+
     private String personID;
+    private String userID;
     private String relation;
+    private String imageURL;
+    private DocumentReference userRef;
 
     public Connection(){}
 
-    public Connection(String fullName, String userID, String personID, String relation){
-        this.fullName = fullName;
+    public Connection( String personID, String userID, String relation, String imageURL, DocumentReference userRef){
         this.userID = userID;
         this.personID = personID;
         this.relation = relation;
-    }
-
-    public String getFullName(){
-        return fullName;
-    }
-
-    public void setFullName(String fullName){
-        this.fullName = fullName;
+        this.imageURL = imageURL;
+        this.userRef = userRef;
     }
 
     public String getUserID(){
@@ -41,19 +39,20 @@ public class Connection{
         return personID;
     }
 
-    public void setPersonID(String personID){
-        this.personID = personID;
-    }
+    public void setPersonID(String personID){ this.personID = personID; }
 
     public String getRelation(){
         return relation;
     }
 
-    public void setRelation(String relation){
-        this.relation = relation;
-    }
+    public void setRelation(String relation) { this.relation = relation;}
 
-    public String toString(){
-        return "Full Name: " + fullName + "\n" + "User ID: " + userID + "\n" + "Face ID: " + personID + "\n" + "Relation: " + relation + "\n";
-    }
+    public String getImageURL(){ return imageURL; }
+
+    public void setImageURL(String imageURL){ this.imageURL = imageURL; }
+
+    public DocumentReference getUserRef() { return userRef; }
+
+    public void setUserRef(DocumentReference userRef) { this.userRef = userRef; }
+
 }
