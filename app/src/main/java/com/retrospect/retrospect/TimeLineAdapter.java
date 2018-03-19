@@ -8,11 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.vipulasri.timelineview.TimelineView;
-import com.retrospect.retrospect.R;
 import com.retrospect.retrospect.model.*;
 import com.retrospect.retrospect.utils.DateTimeUtils;
 import com.retrospect.retrospect.utils.VectorDrawableUtils;
-import com.retrospect.retrospect.MainActivity;
 
 import java.util.List;
 
@@ -25,9 +23,8 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     private Context mContext;
     private Orientation mOrientation;
     private boolean mWithLinePadding;
-    private LayoutInflater mLayoutInflater;
 
-    public TimeLineAdapter(List<TimeLineModel> feedList, Orientation orientation, boolean withLinePadding) {
+    TimeLineAdapter(List<TimeLineModel> feedList, Orientation orientation, boolean withLinePadding) {
         mFeedList = feedList;
         mOrientation = orientation;
         mWithLinePadding = withLinePadding;
@@ -41,7 +38,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     @Override
     public TimeLineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
-        mLayoutInflater = LayoutInflater.from(mContext);
+        LayoutInflater mLayoutInflater = LayoutInflater.from(mContext);
         View view;
 
         if(mOrientation == Orientation.HORIZONTAL) {

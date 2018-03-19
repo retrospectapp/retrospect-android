@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * Created by nithin on 2/28/2018.
+ *
  */
 
 public class TimelineFragment extends Fragment {
@@ -34,7 +35,7 @@ public class TimelineFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_timeline, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
         if(mRecyclerView == null)
             Log.d("NULL","RecyclerView is null!");
 
@@ -45,7 +46,6 @@ public class TimelineFragment extends Fragment {
 
         return view;
     }
-
 
     private void initView() {
         setDataListItems();
@@ -60,7 +60,6 @@ public class TimelineFragment extends Fragment {
         mDataList.add(new TimeLineModel("Item has been given to the courier", "2017-02-11 18:00", OrderStatus.COMPLETED));
         mDataList.add(new TimeLineModel("Item is packed and will dispatch soon", "2017-02-11 09:30", OrderStatus.COMPLETED));
         mDataList.add(new TimeLineModel("Order is being readied for dispatch", "2017-02-11 08:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order processing initiated", "2017-02-10 15:00", OrderStatus.COMPLETED));
         mDataList.add(new TimeLineModel("Order confirmed by seller", "2017-02-10 14:30", OrderStatus.COMPLETED));
         mDataList.add(new TimeLineModel("Order placed successfully", "2017-02-10 14:00", OrderStatus.COMPLETED));
     }

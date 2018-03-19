@@ -13,8 +13,8 @@ public class TimeLineModel implements Parcelable {
     private String mDate;
     private OrderStatus mStatus;
 
-    public TimeLineModel() {
-    }
+//    public TimeLineModel() {
+//    }
 
     public TimeLineModel(String mMessage, String mDate, OrderStatus mStatus) {
         this.mMessage = mMessage;
