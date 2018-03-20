@@ -46,6 +46,15 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // Configure Google Sign In
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser() != null){
+//                    startActivity(new Intent(LoginActivity.this, TimelineUI.class));
+                }
+            }
+        };
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
