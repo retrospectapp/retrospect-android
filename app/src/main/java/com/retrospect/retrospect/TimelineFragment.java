@@ -71,6 +71,7 @@ public class TimelineFragment extends Fragment {
             //When home is clicked
             case android.R.id.home:
                 return true;
+
         }
         Log.d("",""+super.onOptionsItemSelected(item));
         return super.onOptionsItemSelected(item);

@@ -72,7 +72,7 @@
             tools:ignore="NotSibling">
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/peeps"
+                android:id="@+id/peopleButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/person"
@@ -81,7 +81,7 @@
                 app:fab_size="normal" />
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/eve"
+                android:id="@+id/eventsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/event"
@@ -90,7 +90,7 @@
                 app:fab_size="normal" />
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/remi"
+                android:id="@+id/reminderButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/reminder"

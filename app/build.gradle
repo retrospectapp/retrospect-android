@@ -3,7 +3,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.retrospect.retrospect"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -39,6 +39,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:11.8.0'
 
     //etc
+    implementation 'com.github.florent37:camerafragment:1.0.8'
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.jakewharton:butterknife:8.8.1'
         annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'

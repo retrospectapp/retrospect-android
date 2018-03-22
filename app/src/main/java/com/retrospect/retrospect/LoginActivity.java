@@ -115,15 +115,16 @@ public class LoginActivity extends AppCompatActivity {
         if(account != null){
             Intent login;
             if(isNewUser)
-                login = new Intent(LoginActivity.this, Registration.class);
+                login = new Intent(LoginActivity.this, MainActivity.class);
             else
                 login = new Intent(LoginActivity.this, MainActivity.class);
             String uid = account.getUid();
             Bundle accountInfo = new Bundle();
             accountInfo.putString("uid", uid);
-            // Query the Users collection for this ID and return user type
+            //Query the Users collection for this ID and return user type
             //accountInfo.putBoolean("type", isPatient(uid));
             login.putExtras(accountInfo);
+            startActivity(login);
         }
     }
 
