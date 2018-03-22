@@ -19,14 +19,12 @@ import java.util.List;
  */
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
-    private List<TimeLineModel> mFeedList;
+    private List<Event> mFeedList;
     private Context mContext;
-    private Orientation mOrientation;
     private boolean mWithLinePadding;
 
-    TimeLineAdapter(List<TimeLineModel> feedList, Orientation orientation, boolean withLinePadding) {
+    TimeLineAdapter(List<Event> feedList, boolean withLinePadding) {
         mFeedList = feedList;
-        mOrientation = orientation;
         mWithLinePadding = withLinePadding;
     }
 
@@ -40,12 +38,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         mContext = parent.getContext();
         LayoutInflater mLayoutInflater = LayoutInflater.from(mContext);
         View view;
-
-        if(mOrientation == Orientation.HORIZONTAL) {
-            view = mLayoutInflater.inflate(mWithLinePadding ? R.layout.item_timeline_horizontal_line_padding : R.layout.item_timeline_horizontal, parent, false);
-        } else {
-            view = mLayoutInflater.inflate(mWithLinePadding ? R.layout.item_timeline_line_padding : R.layout.item_timeline, parent, false);
-        }
+        view = mLayoutInflater.inflate(mWithLinePadding ? R.layout.item_timeline_line_padding : R.layout.item_timeline, parent, false);
 
         return new TimeLineViewHolder(view, viewType);
     }
@@ -53,24 +46,24 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     @Override
     public void onBindViewHolder(TimeLineViewHolder holder, int position) {
 
-        TimeLineModel timeLineModel = mFeedList.get(position);
+        Event event = mFeedList.get(position);
 
-        if(timeLineModel.getStatus() == OrderStatus.INACTIVE) {
+        if(event.getStatus() == TimeLineCircle.INACTIVE) {
             holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_inactive, android.R.color.darker_gray));
-        } else if(timeLineModel.getStatus() == OrderStatus.ACTIVE) {
+        } else if(event.getStatus() == TimeLineCircle.ACTIVE) {
             holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_active, R.color.colorPrimary));
         } else {
             holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.colorPrimary));
         }
 
-        if(!timeLineModel.getDate().isEmpty()) {
+        if(!event.getDate().isEmpty()) {
             holder.mDate.setVisibility(View.VISIBLE);
-            holder.mDate.setText(DateTimeUtils.parseDateTime(timeLineModel.getDate(), "yyyy-MM-dd HH:mm", "hh:mm a, dd-MMM-yyyy"));
+            holder.mDate.setText(DateTimeUtils.parseDateTime(event.getDate(), "yyyy-MM-dd HH:mm", "hh:mm a, dd-MMM-yyyy"));
         }
         else
             holder.mDate.setVisibility(View.GONE);
 
-        holder.mMessage.setText(timeLineModel.getMessage());
+        holder.mMessage.setText(event.getTitle());
     }
 
     @Override

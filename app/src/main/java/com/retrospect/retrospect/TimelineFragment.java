@@ -10,11 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.retrospect.retrospect.model.OrderStatus;
-import com.retrospect.retrospect.model.Orientation;
-import com.retrospect.retrospect.model.TimeLineModel;
+import com.retrospect.retrospect.model.TimeLineCircle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -26,8 +25,7 @@ public class TimelineFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private TimeLineAdapter mTimeLineAdapter;
-    private List<TimeLineModel> mDataList = new ArrayList<>();
-    private Orientation mOrientation;
+    private List<Event> mDataList = new ArrayList<>();
     private boolean mWithLinePadding;
 
     @Override
@@ -49,19 +47,20 @@ public class TimelineFragment extends Fragment {
 
     private void initView() {
         setDataListItems();
-        mTimeLineAdapter = new TimeLineAdapter(mDataList, mOrientation, mWithLinePadding);
+        mTimeLineAdapter = new TimeLineAdapter(mDataList, mWithLinePadding);
         mRecyclerView.setAdapter(mTimeLineAdapter);
     }
 
     private void setDataListItems(){
-        mDataList.add(new TimeLineModel("Item successfully delivered", "", OrderStatus.INACTIVE));
-        mDataList.add(new TimeLineModel("Courier is out to delivery your order", "2017-02-12 08:00", OrderStatus.ACTIVE));
-        mDataList.add(new TimeLineModel("Item has reached courier facility at New Delhi", "2017-02-11 21:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Item has been given to the courier", "2017-02-11 18:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Item is packed and will dispatch soon", "2017-02-11 09:30", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order is being readied for dispatch", "2017-02-11 08:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order confirmed by seller", "2017-02-10 14:30", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order placed successfully", "2017-02-10 14:00", OrderStatus.COMPLETED));
+        HashMap<String, String> hmapTest = new HashMap<String, String>(); //TODO remove
+        HashMap<String, String[]> hmapTest2 = new HashMap<String, String[]>(); //TODO remove
+        mDataList.add(new Event("Test Event Title", "6h ago", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
+        mDataList.add(new Event("Test Event Title2", "Yesterday", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
+        mDataList.add(new Event("Test Event Title2", "Yesterday", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
+        mDataList.add(new Event("Test Event Title2", "Yesterday", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
+        mDataList.add(new Event("Test Event Title2", "Yesterday", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
+        mDataList.add(new Event("Test Event Title2", "Yesterday", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
+
     }
 
     @Override
