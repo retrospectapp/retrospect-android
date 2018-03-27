@@ -1,6 +1,5 @@
 package com.retrospect.retrospect;
 
-import android.*;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;

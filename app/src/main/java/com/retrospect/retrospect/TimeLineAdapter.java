@@ -1,6 +1,7 @@
 package com.retrospect.retrospect;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,18 +15,15 @@ import com.retrospect.retrospect.utils.VectorDrawableUtils;
 
 import java.util.List;
 
-/**
- * Created by nithin.
- */
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
-    private List<Event> mFeedList;
-    private Context mContext;
-    private boolean mWithLinePadding;
+    private List<Event> eventList;
+    private Context context;
+    private onItemClickListener onClickListener;
 
-    TimeLineAdapter(List<Event> feedList, boolean withLinePadding) {
-        mFeedList = feedList;
-        mWithLinePadding = withLinePadding;
+    TimeLineAdapter(List<Event> eventList, onItemClickListener onClickListener) {
+        this.eventList = eventList;
+        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -33,27 +31,25 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         return TimelineView.getTimeLineViewType(position,getItemCount());
     }
 
-    @Override
-    public TimeLineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        mContext = parent.getContext();
-        LayoutInflater mLayoutInflater = LayoutInflater.from(mContext);
-        View view;
-        view = mLayoutInflater.inflate(mWithLinePadding ? R.layout.item_timeline_line_padding : R.layout.item_timeline, parent, false);
-
-        return new TimeLineViewHolder(view, viewType);
+    @Override @NonNull
+    public TimeLineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
+        LayoutInflater mLayoutInflater = LayoutInflater.from(context);
+        View view = mLayoutInflater.inflate(R.layout.item_timeline, parent, false);
+        return new TimeLineViewHolder(view, viewType, onClickListener);
     }
 
     @Override
-    public void onBindViewHolder(TimeLineViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TimeLineViewHolder holder, int position) {
 
-        Event event = mFeedList.get(position);
+        Event event = eventList.get(position);
 
         if(event.getStatus() == TimeLineCircle.INACTIVE) {
-            holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_inactive, android.R.color.darker_gray));
+            holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(context, R.drawable.ic_marker_inactive, android.R.color.darker_gray));
         } else if(event.getStatus() == TimeLineCircle.ACTIVE) {
-            holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_active, R.color.colorPrimary));
+            holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(context, R.drawable.ic_marker_active, R.color.colorPrimary));
         } else {
-            holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.colorPrimary));
+            holder.mTimelineView.setMarker(ContextCompat.getDrawable(context, R.drawable.ic_marker), ContextCompat.getColor(context, R.color.colorPrimary));
         }
 
         if(!event.getDate().isEmpty()) {
@@ -68,7 +64,10 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
     @Override
     public int getItemCount() {
-        return (mFeedList!=null? mFeedList.size():0);
+        return (eventList !=null? eventList.size():0);
     }
 
+    public interface onItemClickListener{
+        void onItemClicked(int position);
+    }
 }

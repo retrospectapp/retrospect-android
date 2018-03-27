@@ -1,12 +1,12 @@
 package com.retrospect.retrospect;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,58 +21,45 @@ import java.util.List;
  *
  */
 
-public class TimelineFragment extends Fragment {
+public class TimelineFragment extends Fragment implements TimeLineAdapter.onItemClickListener {
 
-    private RecyclerView mRecyclerView;
-    private TimeLineAdapter mTimeLineAdapter;
-    private List<Event> mDataList = new ArrayList<>();
-    private boolean mWithLinePadding;
+    private List<Event> eventList = new ArrayList<>();
+    private final static String TAG = TimelineFragment.class.getSimpleName();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_timeline, container, false);
 
-        mRecyclerView = view.findViewById(R.id.recyclerView);
-        if(mRecyclerView == null)
-            Log.d("NULL","RecyclerView is null!");
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        getData();
 
-        initView();
+        TimeLineAdapter timeLineAdapter = new TimeLineAdapter(eventList, this);
+        recyclerView.setAdapter(timeLineAdapter);
 
         return view;
     }
 
-    private void initView() {
-        setDataListItems();
-        mTimeLineAdapter = new TimeLineAdapter(mDataList, mWithLinePadding);
-        mRecyclerView.setAdapter(mTimeLineAdapter);
-    }
-
-    private void setDataListItems(){
-        HashMap<String, String> hmapTest = new HashMap<String, String>(); //TODO remove
-        HashMap<String, String[]> hmapTest2 = new HashMap<String, String[]>(); //TODO remove
-        mDataList.add(new Event("Test Event Title", "6h ago", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
-        mDataList.add(new Event("Test Event Title2", "Yesterday", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
-        mDataList.add(new Event("Test Event Title2", "Yesterday", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
-        mDataList.add(new Event("Test Event Title2", "Yesterday", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
-        mDataList.add(new Event("Test Event Title2", "Yesterday", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
-        mDataList.add(new Event("Test Event Title2", "Yesterday", TimeLineCircle.INACTIVE, "details", "location",hmapTest2,hmapTest));
-
+    private void getData() {
+        HashMap<String, String> hmapTest = new HashMap<>(); //TODO remove
+        HashMap<String, String[]> hmapTest2 = new HashMap<>(); //TODO remove
+        eventList.add(new Event("Test 0", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 1", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 2", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 3", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 4", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 5", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 6", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 7", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 8", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 9", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //Menu
-        switch (item.getItemId()) {
-            //When home is clicked
-            case android.R.id.home:
-                return true;
-
-        }
-        Log.d("",""+super.onOptionsItemSelected(item));
-        return super.onOptionsItemSelected(item);
+    public void onItemClicked(int position) {
+        Log.d(TAG, "Title of event being clicked is: " + eventList.get(position).getTitle());
     }
 }

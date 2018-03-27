@@ -1,5 +1,4 @@
 package com.retrospect.retrospect;
-;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,8 +8,10 @@ import com.retrospect.retrospect.model.TimeLineCircle;
 import java.util.HashMap;
 
 /**
- * Created by nithin
+ * Created by shivam
  */
+
+@SuppressWarnings("unused")
 public class Event implements Parcelable {
 
     private String title;
@@ -21,9 +22,7 @@ public class Event implements Parcelable {
     private HashMap<String, String[]>peopleInvolved;
     private HashMap<String, String>images;
 
-
-//    public Event() {
-//    }
+    public Event() {}
 
     public Event(String title, String date, TimeLineCircle mStatus, String details, String location, HashMap<String, String[]> peopleInvolved, HashMap<String, String> images) {
         this.title = title;
@@ -95,7 +94,6 @@ public class Event implements Parcelable {
         return "Title: " + title + "\n" + "Date: " + date + "\n" + "Details: " + details + "\n" + "Image URL:" + images + "\n";
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -108,7 +106,7 @@ public class Event implements Parcelable {
         dest.writeInt(this.mStatus == null ? -1 : this.mStatus.ordinal());
     }
 
-    protected Event(Parcel in) {
+    Event(Parcel in) {
         this.title = in.readString();
         this.date = in.readString();
         int tmpMStatus = in.readInt();

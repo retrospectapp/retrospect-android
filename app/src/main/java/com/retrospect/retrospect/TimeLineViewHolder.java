@@ -9,11 +9,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by HP-HP on 05-12-2015.
+ * Created by Shreyas
  *
  */
 
-public class TimeLineViewHolder extends RecyclerView.ViewHolder {
+public class TimeLineViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     @BindView(R.id.text_timeline_date)
     TextView mDate;
@@ -22,10 +22,19 @@ public class TimeLineViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.time_marker)
     TimelineView mTimelineView;
 
-    public TimeLineViewHolder(View itemView, int viewType) {
-        super(itemView);
+    private TimeLineAdapter.onItemClickListener onClickListener;
 
+    TimeLineViewHolder(View itemView, int viewType, TimeLineAdapter.onItemClickListener onClickListener) {
+        super(itemView);
         ButterKnife.bind(this, itemView);
         mTimelineView.initLine(viewType);
+        this.onClickListener = onClickListener;
+        itemView.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int viewPosition = getAdapterPosition();
+        onClickListener.onItemClicked(viewPosition);
     }
 }
