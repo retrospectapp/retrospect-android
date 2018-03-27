@@ -57,8 +57,6 @@ public class FirebaseClient {
         return (userData.get("isPatient").equals(true));
     }
 
-
-
     public void createCareTaker(String firebaseCareTakerID, User careTaker){
 
         mUserRef.document(firebaseCareTakerID).set(careTaker, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -73,8 +71,6 @@ public class FirebaseClient {
             }
         });
     }
-
-
 
     public void createPatient(String firebaseCareTakerID, String firebasePatientID, User patient){
 
@@ -91,7 +87,7 @@ public class FirebaseClient {
         });
 
         DocumentReference patientDocRef = mUserRef.document(firebasePatientID);
-        Connection newPatient = new Connection(patient.getpersonID(), firebasePatientID, "Patient", patient.getImageURL(), patientDocRef);
+        Connection newPatient = new Connection(patient.getPersonID(), firebasePatientID, "Patient", patient.getImageURL(), patientDocRef);
 
         mUserRef.document(firebaseCareTakerID).collection("Patients").document(firebasePatientID).set(newPatient).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -105,8 +101,6 @@ public class FirebaseClient {
             }
         });
     }
-
-
 
     public void deleteUser(String firebaseID){
 
@@ -147,7 +141,6 @@ public class FirebaseClient {
         });
     }
 
-
     public void removeUser(String firebaseCareTakerID, String firebasePatientID){
 
         mUserRef.document(firebasePatientID).collection("Caretakers").document(firebaseCareTakerID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -162,8 +155,6 @@ public class FirebaseClient {
             }
         });
     }
-
-
 
     public void removePatient(String firebaseCareTakerID, String firebasePatientID){
 
@@ -180,13 +171,9 @@ public class FirebaseClient {
         });
     }
 
-
-
     private List<DocumentSnapshot> fetchCareTakerSnapshots(String firebasePatientID){
         return mUserRef.document(firebasePatientID).collection("Connections").whereEqualTo("relation", "Caretaker").get().getResult().getDocuments();
     }
-
-
 
     public List<User> fetchCareTakers(String firebasePatientID){
 
@@ -198,9 +185,6 @@ public class FirebaseClient {
         return fetchedCareTakers;
     }
 
-
-
-
     public User fetchUser(String firebaseUserID){
 
         return mUserRef.document(firebaseUserID).get().addOnFailureListener(new OnFailureListener() {
@@ -210,8 +194,6 @@ public class FirebaseClient {
             }
         }).getResult().toObject(User.class);
     }
-
-
 
     private List<DocumentSnapshot> fetchPatientSnapshots(String firebaseUserID){
 
@@ -223,8 +205,6 @@ public class FirebaseClient {
         }).getResult().getDocuments();
 
     }
-
-
 
     public List<User> fetchPatients(String firebaseUserID){
 

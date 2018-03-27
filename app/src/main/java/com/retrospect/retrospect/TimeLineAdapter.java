@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.vipulasri.timelineview.TimelineView;
-import com.retrospect.retrospect.model.*;
 import com.retrospect.retrospect.utils.DateTimeUtils;
+import com.retrospect.retrospect.utils.TimeLineCircle;
 import com.retrospect.retrospect.utils.VectorDrawableUtils;
 
 import java.util.List;

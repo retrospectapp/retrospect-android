@@ -10,7 +10,8 @@ public class User {
 
     private String firstName;
     private String lastName;
-    private int age;;
+    private int age;
+    private String firebaseID;
     private String personID;
     private String emailID;
     private String imageURL;
@@ -47,7 +48,7 @@ public class User {
 
     public void setAge(int age){ this.age = age; }
 
-    public String getpersonID(){
+    public String getPersonID(){
         return personID;
     }
 

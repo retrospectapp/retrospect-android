@@ -3,7 +3,7 @@ package com.retrospect.retrospect;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.retrospect.retrospect.model.TimeLineCircle;
+import com.retrospect.retrospect.utils.TimeLineCircle;
 
 import java.util.HashMap;
 
