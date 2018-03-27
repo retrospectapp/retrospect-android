@@ -87,7 +87,8 @@ public class FirebaseClient {
         });
 
         DocumentReference patientDocRef = mUserRef.document(firebasePatientID);
-        Connection newPatient = new Connection(patient.getPersonID(), firebasePatientID, "Patient", patient.getImageURL(), patientDocRef);
+        //TODO:fix this next line - jingleURL
+        Connection newPatient = new Connection(patient, "Patient", "");
 
         mUserRef.document(firebaseCareTakerID).collection("Patients").document(firebasePatientID).set(newPatient).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

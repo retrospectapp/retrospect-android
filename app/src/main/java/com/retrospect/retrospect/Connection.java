@@ -4,9 +4,7 @@ package com.retrospect.retrospect;
  * Created by sniradi on 3/26/18.
  */
 
-import com.google.firebase.firestore.DocumentReference;package com.retrospect.retrospect;
-
-        import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -29,7 +27,7 @@ public class Connection {
         this.user = user;
         this.relation = relation;
         this.jingleURL = jingleURL;
-        this.userReference = FirebaseFirestore.getInstance().collection("sampleData/Users").document(user.get);
+        //this.userReference = FirebaseFirestore.getInstance().collection("sampleData/Users").document(user.get);
     }
 
     public User getUser() {
