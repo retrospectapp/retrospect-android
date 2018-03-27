@@ -8,11 +8,6 @@ import com.github.vipulasri.timelineview.TimelineView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Shreyas
- *
- */
-
 public class TimeLineViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     @BindView(R.id.text_timeline_date)

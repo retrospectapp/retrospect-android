@@ -2,12 +2,6 @@ package com.retrospect.retrospect;
 
 import com.google.firebase.firestore.DocumentReference;
 
-/**
- * Created by Shivam on 1/19/2018.
- *
- */
-
-
 @SuppressWarnings("unused")
 public class Connection {
 

@@ -7,10 +7,6 @@ import com.retrospect.retrospect.model.TimeLineCircle;
 
 import java.util.HashMap;
 
-/**
- * Created by shivam
- */
-
 @SuppressWarnings("unused")
 public class Event implements Parcelable {
 

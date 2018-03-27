@@ -17,11 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Created by nithin on 2/28/2018.
- *
- */
-
 public class TimelineFragment extends Fragment implements TimeLineAdapter.onItemClickListener {
 
     private List<Event> eventList = new ArrayList<>();
