@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.retrospect.retrospect.model.TimeLineCircle;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,8 +25,8 @@ import java.util.List;
 public class TimelineFragment extends Fragment implements TimeLineAdapter.onItemClickListener {
 
     private List<Event> eventList = new ArrayList<>();
-    private final static String TAG = TimelineFragment.class.getSimpleName();
-
+    private final static String TAG = "TOUCHEVENT";
+    private SlidingUpPanelLayout slidingUpPanelLayout;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,6 +40,19 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
 
         TimeLineAdapter timeLineAdapter = new TimeLineAdapter(eventList, this);
         recyclerView.setAdapter(timeLineAdapter);
+
+        slidingUpPanelLayout = view.findViewById(R.id.sliding_layout);
+        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_DRAGGING)
+                    Log.d(TAG, "Dragging");
+                    slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            }
+        });
 
         return view;
     }
@@ -61,5 +75,6 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
     @Override
     public void onItemClicked(int position) {
         Log.d(TAG, "Title of event being clicked is: " + eventList.get(position).getTitle());
+        slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 }
