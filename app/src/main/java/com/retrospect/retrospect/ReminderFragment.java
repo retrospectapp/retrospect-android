@@ -29,13 +29,6 @@ public class ReminderFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private Context mContext;
-    @Override
-    public void onAttach(final Activity activity){
-        super.onAttach(activity);
-        mContext = activity;
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,12 +42,12 @@ public class ReminderFragment extends Fragment {
         reminders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 createReminderFragment = new CreateReminderFragment();
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.FragmentContainer, createReminderFragment);
                 fragmentTransaction.commit();
-
 
             }
         });

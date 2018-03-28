@@ -4,6 +4,11 @@
     <string name="event">Add Event</string>
     <string name="reminder">Add Reminder</string>
     <string name="title_activity_identity_person">identityPerson</string>
+    <string name="nav_reminders">Reminders</string>
+    <string name="nav_events">Timeline</string>
+    <string name="nav_connections">Connections</string>
+    <string name="nav_identify">Identify</string>
+    <string name="nav_profile">Profile</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

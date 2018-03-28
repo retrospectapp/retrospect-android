@@ -6,4 +6,5 @@
     <color name="colorText">#212121</color>
     <color name="background">#FFFFFF</color>
     <color name="graylight">#ababab</color>
+    <color name="colorWhiteTransparent">#80ffffff</color>
 </resources>
