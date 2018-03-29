@@ -1,12 +1,12 @@
 package com.retrospect.retrospect;
 
 
-import android.app.Activity;
-import android.content.Context;
+
 import android.os.Bundle;
 import com.github.clans.fab.FloatingActionButton;
+
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,16 +37,18 @@ public class ReminderFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_reminder, container, false);
         Log.d("onCreate", "onCreateView: Trying to inflate view");
 
-        reminders = (FloatingActionButton) v.findViewById(R.id.create_remind);
+        reminders = (com.github.clans.fab.FloatingActionButton) v.findViewById(R.id.create_remind);
+
+        reminders.show(true);
 
         reminders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 createReminderFragment = new CreateReminderFragment();
-
+                reminders.hide(true);
                 android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.FragmentContainer, createReminderFragment);
+                fragmentTransaction.replace(R.id.contentContainer, createReminderFragment);
                 fragmentTransaction.commit();
 
             }

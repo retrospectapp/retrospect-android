@@ -144,7 +144,7 @@ public class CreateReminderFragment extends Fragment implements TimePickerDialog
                 reminderFragment = new ReminderFragment();
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.FragmentContainer, reminderFragment);
+                fragmentTransaction.replace(R.id.contentContainer, reminderFragment);
                 fragmentTransaction.commit();
             }
         });
@@ -156,7 +156,7 @@ public class CreateReminderFragment extends Fragment implements TimePickerDialog
                 Toast.makeText(getContext(), "Reminder Cancelled", Toast.LENGTH_LONG).show();
 
                 android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.FragmentContainer, reminderFragment);
+                fragmentTransaction.replace(R.id.contentContainer, reminderFragment);
                 fragmentTransaction.commit();
             }
         });

@@ -114,9 +114,9 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUI(FirebaseUser account, boolean isNewUser){
         if(account != null){
             Intent login;
-//            if(isNewUser)
-//                login = new Intent(LoginActivity.this, Registration.class);
-//            else
+            if(isNewUser)
+                login = new Intent(LoginActivity.this, Registration.class);
+            else
                 login = new Intent(LoginActivity.this, MainActivity.class);
             String uid = account.getUid();
             Bundle accountInfo = new Bundle();
