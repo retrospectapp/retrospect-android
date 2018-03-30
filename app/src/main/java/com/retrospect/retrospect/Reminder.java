@@ -30,6 +30,7 @@ public class Reminder {
         this.imageURLs = imageURLS;
     }
 
+    //constructor without audio and images
     public Reminder (String title, String date, String time, String period, String details){
         this.title = title;
         this.date = date;

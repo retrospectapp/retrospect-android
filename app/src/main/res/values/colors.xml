@@ -7,4 +7,5 @@
     <color name="background">#FFFFFF</color>
     <color name="graylight">#ababab</color>
     <color name="colorWhiteTransparent">#80ffffff</color>
+    <color name="reminderCardColor">#fafafa</color>
 </resources>
