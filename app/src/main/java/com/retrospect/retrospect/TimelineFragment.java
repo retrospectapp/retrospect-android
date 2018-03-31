@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.retrospect.retrospect.model.TimeLineCircle;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -19,6 +21,7 @@ import java.util.List;
 
 public class TimelineFragment extends Fragment implements TimeLineAdapter.onItemClickListener {
 
+    private  ArrayList<String> mImageUrls = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private final static String TAG = "TOUCHEVENT";
     private SlidingUpPanelLayout slidingUpPanelLayout;
@@ -48,18 +51,36 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
                     slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }
         });
-
+        getImages(view);
         return view;
+    }
+
+    private void getImages(View view){
+        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");    //doesn't work
+        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
+        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
+        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
+        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
+        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
+        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
+        initSidewaysImageScroll(view);
+    }
+
+    private void initSidewaysImageScroll(View view){
+        RecyclerView imageScroll = view.findViewById(R.id.horiz_image_scroll);
+        imageScroll.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        HorizImageAdapter adapter = new HorizImageAdapter(getActivity(),mImageUrls);
+        imageScroll.setAdapter(adapter);
     }
 
     private void getData() {
         HashMap<String, String> hmapTest = new HashMap<>(); //TODO remove
         HashMap<String, String[]> hmapTest2 = new HashMap<>(); //TODO remove
-        eventList.add(new Event("Test 0", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
-        eventList.add(new Event("Test 1", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
-        eventList.add(new Event("Test 2", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
-        eventList.add(new Event("Test 3", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
-        eventList.add(new Event("Test 4", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 0", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details1", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 1", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details2", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 2", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details2", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 3", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details3", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 4", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details4", "location", hmapTest2, hmapTest));
         eventList.add(new Event("Test 5", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
         eventList.add(new Event("Test 6", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
         eventList.add(new Event("Test 7", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
@@ -71,5 +92,9 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
     public void onItemClicked(int position) {
         Log.d(TAG, "Title of event being clicked is: " + eventList.get(position).getTitle());
         slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        TextView title = getActivity().findViewById(R.id.detailsTitle);
+        title.setText(eventList.get(position).getTitle());
+        EditText details = getActivity().findViewById(R.id.details_description);
+        details.setText(eventList.get(position).getDetails());
     }
 }
