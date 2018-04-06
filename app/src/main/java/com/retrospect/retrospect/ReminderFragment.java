@@ -34,7 +34,10 @@ public class ReminderFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
 
+    private String uid;
+
     private List<Reminder> reminderList;
+    private FirebaseClient client;
 
 
     public ReminderFragment() {
@@ -52,7 +55,7 @@ public class ReminderFragment extends Fragment {
         reminders = (com.github.clans.fab.FloatingActionButton) v.findViewById(R.id.create_remind);
         recyclerView = (RecyclerView) v.findViewById(R.id.reminders_recycler_view);
 
-
+        uid = getArguments().getString("uid");
 
 
         reminders.show(true);
@@ -62,11 +65,16 @@ public class ReminderFragment extends Fragment {
 
         reminderList = new ArrayList<>();
 
-        for (int i=0; i<10; i++){
-            Reminder card = new Reminder("Reminder " + (i+1), "3/28/2018", "12:00" , "AM", "Details");
+        //TODO: pull reminders from database and populate list
 
-            reminderList.add(card);
-        }
+        reminderList = client.fetchReminders(uid);
+
+//        for (int i=0; i<10; i++){
+//            client.fetc
+//            Reminder card = new Reminder("Reminder " + (i+1), "3/28/2018", "12:00" , "AM", "Details");
+//
+//            reminderList.add(card);
+//        }
 
         adapter = new ReminderCardAdapter(reminderList, getContext());
 
@@ -75,8 +83,10 @@ public class ReminderFragment extends Fragment {
         reminders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Bundle bundle = new Bundle();
+                bundle.putString("uid", uid);
                 createReminderFragment = new CreateReminderFragment();
+                createReminderFragment.setArguments(bundle);
                 reminders.hide(true);
                 android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.contentContainer, createReminderFragment);

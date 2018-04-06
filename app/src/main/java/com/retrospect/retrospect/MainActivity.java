@@ -1,5 +1,6 @@
 package com.retrospect.retrospect;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -20,10 +21,15 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionMenu floatingActionMenu;
     private FloatingActionButton createRemind;
 
+    private String accountUID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline_ui);
+
+        accountUID = getIntent().getStringExtra("uid");
+
 
 
         mainNav = (BottomNavigationView) findViewById(R.id.main_nav);
@@ -44,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
                 setFragment(new CreateReminderFragment());
             }
         });
+
+        final Bundle bundle = new Bundle();
+        bundle.putString("uid", accountUID);
+
         mainNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -51,12 +61,16 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_reminders :
 //                      mainNav.setItemBackgroundResource(R.color.colorPrimary);
                         floatingActionMenu.hideMenuButton(true);
-                        setFragment(new ReminderFragment());
+                        ReminderFragment fragment1 = new ReminderFragment();
+                        fragment1.setArguments(bundle);
+                        setFragment(fragment1);
                         return true;
 
                     case R.id.nav_events :
 //                        mainNav.setItemBackgroundResource(R.color.colorPrimary);
                         floatingActionMenu.showMenuButton(true);
+                        TimelineFragment fragment2 = new TimelineFragment();
+                        fragment2.setArguments(bundle);
                         setFragment(new TimelineFragment());
                         return true;
 

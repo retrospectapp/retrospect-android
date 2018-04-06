@@ -39,6 +39,9 @@ public class CreateReminderFragment extends Fragment implements TimePickerDialog
     private Button cancel;
 
     private String period;
+    private String time;
+    private String date;
+    private String uid;
 
     private EditText entered_title;
     private EditText entered_descrip;
@@ -74,6 +77,8 @@ public class CreateReminderFragment extends Fragment implements TimePickerDialog
 
         entered_title = (EditText) v.findViewById(R.id.title_input);
         entered_descrip = (EditText) v.findViewById(R.id.descrip_input);
+
+        uid = getArguments().getString("uid");
 
 
         final AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
@@ -136,6 +141,12 @@ public class CreateReminderFragment extends Fragment implements TimePickerDialog
                 calendar.set(Calendar.MINUTE, min_set);
                 calendar.set(Calendar.SECOND, 0);
 
+                //TODO: create reminder and push to database
+                FirebaseClient client = new FirebaseClient();
+                //String title, String date, String time, String period, String details)
+
+                Reminder reminder = new Reminder(noti_title, date, time, period, noti_descrip);
+                client.createReminder(uid, Integer.toString(notifyID), reminder);
 
                 Toast.makeText(getContext(), "Reminder Set", Toast.LENGTH_LONG).show();
 
@@ -169,11 +180,12 @@ public class CreateReminderFragment extends Fragment implements TimePickerDialog
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        String date = "Date: " + dayOfMonth + "/" + (month + 1) + "/" + year;
+        String date1 = "Date: " + (month + 1) + "/" + dayOfMonth + "/" + year;
         year_set = year;
         month_set = month;
         day_set = dayOfMonth;
-        dateTextView.setText(date);
+        dateTextView.setText(date1);
+        date = (month+1)+ "/" + dayOfMonth + "/" + year;
     }
 
     @Override
@@ -191,7 +203,9 @@ public class CreateReminderFragment extends Fragment implements TimePickerDialog
             morn = true;
             period = "AM";
         }
-        String time = "Time: " + hourOfDay + "h" + minute + "m"  + " " + period;
-        timeTextView.setText(time);
+        String time1 = "Time: " + hourOfDay + "h" + minute + "m"  + " " + period;
+        time = hourOfDay + ":" + minute;
+
+        timeTextView.setText(time1);
     }
 }
