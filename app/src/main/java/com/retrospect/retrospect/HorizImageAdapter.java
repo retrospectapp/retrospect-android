@@ -57,4 +57,9 @@ public class HorizImageAdapter extends RecyclerView.Adapter<HorizImageAdapter.Vi
 
         }
     }
+
+    @Override
+    public int getItemViewType(int position) {  //from stackoverflow
+        return position;
+    }
 }

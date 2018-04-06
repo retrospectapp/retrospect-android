@@ -3,6 +3,7 @@ package com.retrospect.retrospect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +13,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.retrospect.retrospect.model.TimeLineCircle;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -19,12 +30,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TimelineFragment extends Fragment implements TimeLineAdapter.onItemClickListener {
+public class TimelineFragment extends Fragment implements TimeLineAdapter.onItemClickListener, OnMapReadyCallback {
 
     private  ArrayList<String> mImageUrls = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private final static String TAG = "TOUCHEVENT";
     private SlidingUpPanelLayout slidingUpPanelLayout;
+    private MapView mMapView;
+    private GoogleMap mMap;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,6 +66,11 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
             }
         });
         getImages(view);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.detailsMap);
+        Log.d("BITCH", String.valueOf(mapFragment==null));
+        mapFragment.getMapAsync(this);
+
         return view;
     }
 
@@ -97,4 +116,16 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
         EditText details = getActivity().findViewById(R.id.details_description);
         details.setText(eventList.get(position).getDetails());
     }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        // DO WHATEVER YOU WANT WITH GOOGLEMAP
+        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        //map.setMyLocationEnabled(true);
+        map.setTrafficEnabled(true);
+        map.setIndoorEnabled(true);
+        map.setBuildingsEnabled(true);
+        map.getUiSettings().setZoomControlsEnabled(true);
+    }
+
 }
