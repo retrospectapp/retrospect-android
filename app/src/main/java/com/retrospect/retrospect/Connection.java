@@ -1,39 +1,37 @@
 package com.retrospect.retrospect;
 
+/**
+ * Created by sniradi on 3/26/18.
+ */
+
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 @SuppressWarnings("unused")
 public class Connection {
 
-    private String personID;
-    private String userID;
+    private User user;
     private String relation;
-    private String imageURL;
-    private DocumentReference userRef;
+    private String jingleURL;
+    private DocumentReference userReference;
+    private boolean isSelected = false;
 
     public Connection(){}
 
-    public Connection( String personID, String userID, String relation, String imageURL, DocumentReference userRef){
-        this.userID = userID;
-        this.personID = personID;
+    Connection(User user, String relation, String jingleURL){
+        this.user = user;
         this.relation = relation;
-        this.imageURL = imageURL;
-        this.userRef = userRef;
+        this.jingleURL = jingleURL;
+        //this.userReference = FirebaseFirestore.getInstance().collection("sampleData/Users").document(user.get);
     }
 
-    public String getUserID(){
-        return userID;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserID(String userID){
-        this.userID = userID;
+    public void setUser(User user) {
+        this.user = user;
     }
-
-    public String getPersonID(){
-        return personID;
-    }
-
-    public void setPersonID(String personID){ this.personID = personID; }
 
     public String getRelation(){
         return relation;
@@ -41,12 +39,20 @@ public class Connection {
 
     public void setRelation(String relation) { this.relation = relation;}
 
-    public String getImageURL(){ return imageURL; }
+    public String getJingleURL() {
+        return jingleURL;
+    }
 
-    public void setImageURL(String imageURL){ this.imageURL = imageURL; }
+    public void setJingleURL(String jingleURL) {
+        this.jingleURL = jingleURL;
+    }
 
-    public DocumentReference getUserRef() { return userRef; }
+    public boolean isSelected(){
+        return isSelected;
+    }
 
-    public void setUserRef(DocumentReference userRef) { this.userRef = userRef; }
+    public void setIsSelected(boolean selected){
+        isSelected = selected;
+    }
 
 }

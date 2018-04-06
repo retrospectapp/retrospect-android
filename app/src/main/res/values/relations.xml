@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="relations">
+        <item>Parent</item>
+        <item>Child</item>
+        <item>Spouse</item>
+        <item>Sibling</item>
+        <item>Grandparent</item>
+        <item>Grandchild</item>
+        <item>Uncle</item>
+        <item>Aunt</item>
+        <item>Nephew</item>
+        <item>Niece</item>
+        <item>Caretaker</item>
+    </string-array>
+</resources>

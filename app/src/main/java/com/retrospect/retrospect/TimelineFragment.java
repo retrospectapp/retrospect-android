@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+<<<<<<< Updated upstream
 import com.retrospect.retrospect.model.TimeLineCircle;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -20,6 +21,31 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TimelineFragment extends Fragment implements TimeLineAdapter.onItemClickListener {
+=======
+import com.google.firebase.auth.FirebaseAuth;
+import com.retrospect.retrospect.model.OrderStatus;
+import com.retrospect.retrospect.model.Orientation;
+import com.retrospect.retrospect.model.TimeLineModel;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by nithin on 2/28/2018.
+ *
+ */
+
+public class TimelineFragment extends Fragment {
+
+    private RecyclerView mRecyclerView;
+    private TimeLineAdapter mTimeLineAdapter;
+    private List<TimeLineModel> mDataList = new ArrayList<>();
+    private Orientation mOrientation;
+    private boolean mWithLinePadding;
+    private FirebaseClient mFirebaseClient;
+    private List<Event> events;
+>>>>>>> Stashed changes
 
     private  ArrayList<String> mImageUrls = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
@@ -30,11 +56,22 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_timeline, container, false);
 
+<<<<<<< Updated upstream
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         getData();
+=======
+        String fireBaseUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        mFirebaseClient = new FirebaseClient();
+        events = mFirebaseClient.fetchEvents(fireBaseUserID);
+
+        mRecyclerView = view.findViewById(R.id.recyclerView);
+        if(mRecyclerView == null)
+            Log.d("NULL","RecyclerView is null!");
+>>>>>>> Stashed changes
 
         TimeLineAdapter timeLineAdapter = new TimeLineAdapter(eventList, this);
         recyclerView.setAdapter(timeLineAdapter);
@@ -97,4 +134,6 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
         EditText details = getActivity().findViewById(R.id.details_description);
         details.setText(eventList.get(position).getDetails());
     }
+
+
 }
