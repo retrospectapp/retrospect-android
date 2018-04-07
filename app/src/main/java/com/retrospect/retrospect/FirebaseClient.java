@@ -2,6 +2,7 @@ package com.retrospect.retrospect;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,6 +58,8 @@ public class FirebaseClient {
         return (userData.get("isPatient").equals(true));
     }
 
+
+
     public void createCareTaker(String firebaseCareTakerID, User careTaker){
 
         mUserRef.document(firebaseCareTakerID).set(careTaker, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -72,7 +75,9 @@ public class FirebaseClient {
         });
     }
 
-    public void createPatient(String firebaseCareTakerID, String firebasePatientID, User patient){
+
+
+    public void createPatient(String firebaseCareTakerID, String firebasePatientID, User patient, String jingleAudioURL){
 
         mUserRef.document(firebasePatientID).set(patient, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -87,8 +92,7 @@ public class FirebaseClient {
         });
 
         DocumentReference patientDocRef = mUserRef.document(firebasePatientID);
-        //TODO:fix this next line - jingleURL
-        Connection newPatient = new Connection(patient, "Patient", "");
+        Connection newPatient = new Connection(patient, "Patient", jingleAudioURL);
 
         mUserRef.document(firebaseCareTakerID).collection("Patients").document(firebasePatientID).set(newPatient).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -102,6 +106,27 @@ public class FirebaseClient {
             }
         });
     }
+
+
+    private List<DocumentSnapshot> fetchUserSnapshots(){
+        return mUserRef.get().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(USERTAG, "Failed to fetch user snapshots");
+            }
+        }).getResult().getDocuments();
+    }
+
+
+    public ArrayList<User> fetchUsers(){
+        ArrayList<User> fetchedUsers = new ArrayList<>();
+        ArrayList<DocumentSnapshot> fetchedUserSnapshots = new ArrayList<>(fetchUserSnapshots());
+        for(int i = 0; i < fetchedUserSnapshots.size(); i++){
+            fetchedUsers.add(fetchedUserSnapshots.get(i).toObject(User.class));
+        }
+        return fetchedUsers;
+    }
+
 
     public void deleteUser(String firebaseID){
 
@@ -142,6 +167,7 @@ public class FirebaseClient {
         });
     }
 
+
     public void removeUser(String firebaseCareTakerID, String firebasePatientID){
 
         mUserRef.document(firebasePatientID).collection("Caretakers").document(firebaseCareTakerID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -156,6 +182,7 @@ public class FirebaseClient {
             }
         });
     }
+
 
     public void removePatient(String firebaseCareTakerID, String firebasePatientID){
 
@@ -172,19 +199,21 @@ public class FirebaseClient {
         });
     }
 
+
     private List<DocumentSnapshot> fetchCareTakerSnapshots(String firebasePatientID){
         return mUserRef.document(firebasePatientID).collection("Connections").whereEqualTo("relation", "Caretaker").get().getResult().getDocuments();
     }
 
-    public List<User> fetchCareTakers(String firebasePatientID){
+    public ArrayList<User> fetchCareTakers(String firebasePatientID){
 
-        List<User> fetchedCareTakers = new ArrayList<>();
-        List<DocumentSnapshot> fetchedCareTakerSnapshots = fetchCareTakerSnapshots(firebasePatientID);
+        ArrayList<User> fetchedCareTakers = new ArrayList<>();
+        ArrayList<DocumentSnapshot> fetchedCareTakerSnapshots = new ArrayList<>(fetchCareTakerSnapshots(firebasePatientID));
         for(int i = 0; i < fetchedCareTakerSnapshots.size(); i++){
             fetchedCareTakers.add(fetchedCareTakerSnapshots.get(i).toObject(User.class));
         }
         return fetchedCareTakers;
     }
+
 
     public User fetchUser(String firebaseUserID){
 
@@ -196,6 +225,7 @@ public class FirebaseClient {
         }).getResult().toObject(User.class);
     }
 
+
     private List<DocumentSnapshot> fetchPatientSnapshots(String firebaseUserID){
 
         return mUserRef.document(firebaseUserID).collection("Patients").get().addOnFailureListener(new OnFailureListener() {
@@ -204,19 +234,34 @@ public class FirebaseClient {
                 Log.w(USERTAG, "Failed to fetch user's patients", e);
             }
         }).getResult().getDocuments();
-
     }
 
-    public List<User> fetchPatients(String firebaseUserID){
 
-        List<User> fetchedPatients = new ArrayList<>();
-        List<DocumentSnapshot> patientSnapshots = fetchPatientSnapshots(firebaseUserID);
+    public ArrayList<User> fetchPatients(String firebaseUserID){
+
+        ArrayList<User> fetchedPatients = new ArrayList<>();
+        ArrayList<DocumentSnapshot> patientSnapshots = new ArrayList<>(fetchPatientSnapshots(firebaseUserID));
         for(int i = 0; i < patientSnapshots.size(); i++){
             fetchedPatients.add(patientSnapshots.get(i).toObject(User.class));
         }
         return fetchedPatients;
     }
 
+
+    public void createEvent(String firebaseUserID, Event event, String firebaseEventID){
+
+        mUserRef.document(firebaseUserID).collection("Events").document(firebaseEventID).set(event).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(EVENTTAG, "Event successfully created");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(EVENTTAG, "Faile to create event", e);
+            }
+        });
+    }
 
 
     public Event fetchEvent(String firebaseCareTakerID, String firebaseEventID){
@@ -230,7 +275,6 @@ public class FirebaseClient {
     }
 
 
-
     private List<DocumentSnapshot> fetchEventSnapshots(String firebasePatientID){
 
         return mUserRef.document(firebasePatientID).collection("Events").get().addOnFailureListener(new OnFailureListener() {
@@ -242,11 +286,10 @@ public class FirebaseClient {
     }
 
 
+    public ArrayList<Event> fetchEvents(String firebasePatientID){
 
-    private List<Event> fetchEvents(String firebasePatientID){
-
-        List<Event> fetchedEvents = new ArrayList<>();
-        List<DocumentSnapshot> eventSnapshots = fetchEventSnapshots(firebasePatientID);
+        ArrayList<Event> fetchedEvents = new ArrayList<>();
+        ArrayList<DocumentSnapshot> eventSnapshots = new ArrayList<>(fetchEventSnapshots(firebasePatientID));
         for (int i = 0; i < eventSnapshots.size(); i++){
             fetchedEvents.add(eventSnapshots.get(i).toObject(Event.class));
         }
@@ -254,19 +297,17 @@ public class FirebaseClient {
     }
 
 
+    public ArrayList<Event> fetchSharedEvents(String firebasePatientID, Connection connection){
 
-    public List<Event> fetchSharedEvents(String firebasePatientID, String firebaseCareTakerID){
-
-        List<Event> sharedEvents = new ArrayList<>();
-        List<Event> fetchedEvents = fetchEvents(firebasePatientID);
+        ArrayList<Event> sharedEvents = new ArrayList<>();
+        ArrayList<Event> fetchedEvents = new ArrayList<>(fetchEvents(firebasePatientID));
         for(int i = 0; i < fetchedEvents.size(); i++){
-            if (fetchedEvents.get(i).getPeopleInvolved().containsKey(firebaseCareTakerID)){
+            if (fetchedEvents.get(i).getPeopleInvolved().contains(connection)){
                 sharedEvents.add(fetchedEvents.get(i));
             }
         }
         return sharedEvents;
     }
-
 
 
     public void updateEvent(String firebasePatientID, String firebaseEventID, Event event){
@@ -283,7 +324,6 @@ public class FirebaseClient {
             }
         });
     }
-
 
 
     public void deleteEvent(String firebasePatientID, String firebaseEventID){
@@ -314,7 +354,6 @@ public class FirebaseClient {
     }
 
 
-
     public void createReminder(String firebasePatientID,String reminderID, Reminder reminder){
 
         mUserRef.document(firebasePatientID).collection("Reminders").document(reminderID).set(reminder).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -331,7 +370,6 @@ public class FirebaseClient {
     }
 
 
-
     public Reminder fetchReminder(String firebasePatientID, String reminderID){
 
        return mUserRef.document(firebasePatientID).collection("Reminders").document(reminderID).get().addOnFailureListener(new OnFailureListener() {
@@ -341,7 +379,6 @@ public class FirebaseClient {
             }
         }).getResult().toObject(Reminder.class);
     }
-
 
 
     private List<DocumentSnapshot> fetchReminderSnapshots(String firebasePatientID){
@@ -355,17 +392,15 @@ public class FirebaseClient {
     }
 
 
+    public ArrayList<Reminder> fetchReminders(String firebasePatientID){
 
-    public List<Reminder> fetchReminders(String firebasePatientID){
-
-        List<Reminder> fetchedReminders = new ArrayList<>();
-        List<DocumentSnapshot> reminderSnapshots = fetchReminderSnapshots(firebasePatientID);
+        ArrayList<Reminder> fetchedReminders = new ArrayList<>();
+        ArrayList<DocumentSnapshot> reminderSnapshots = new ArrayList<>(fetchReminderSnapshots(firebasePatientID));
         for(int i = 0; i < reminderSnapshots.size(); i++){
             fetchedReminders.add(reminderSnapshots.get(i).toObject(Reminder.class));
         }
         return fetchedReminders;
     }
-
 
 
     public void updateReminder(String firebasePatientID, String reminderID, Reminder reminder){
@@ -384,7 +419,6 @@ public class FirebaseClient {
     }
 
 
-
     public void deleteReminder(String firebasePatientID, String reminderID){
 
         mUserRef.document(firebasePatientID).collection("Reminders").document(reminderID).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -399,7 +433,6 @@ public class FirebaseClient {
             }
         });
     }
-
 
 
     public void createConnection(String firebasePatientID, String personID, Connection connection){
@@ -418,7 +451,6 @@ public class FirebaseClient {
     }
 
 
-
     public Connection fetchUserConnection(String firebaseUserID, String personID){
 
         return mUserRef.document(firebaseUserID).collection("Connections").document(personID).get().addOnFailureListener(new OnFailureListener() {
@@ -428,7 +460,6 @@ public class FirebaseClient {
             }
         }).getResult().toObject(Connection.class);
     }
-
 
 
     private List<DocumentSnapshot> fetchUserSnapshots(String firebaseUserID){
@@ -442,17 +473,15 @@ public class FirebaseClient {
     }
 
 
+    public ArrayList<Connection> fetchConnections(String firebaseUserID){
 
-    public List<Connection> fetchConnections(String firebaseUserID){
-
-        List<Connection> fetchedConnections = new ArrayList<>();
-        List<DocumentSnapshot> connectionSnapshots = fetchUserSnapshots(firebaseUserID);
+        ArrayList<Connection> fetchedConnections = new ArrayList<>();
+        ArrayList<DocumentSnapshot> connectionSnapshots = new ArrayList<>(fetchUserSnapshots(firebaseUserID));
         for(int i = 0; i < connectionSnapshots.size(); i++){
             fetchedConnections.add(connectionSnapshots.get(i).toObject(Connection.class));
         }
         return fetchedConnections;
     }
-
 
 
     public void deleteUserConnection(String firebaseUserID, String personID){

@@ -28,10 +28,11 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return TimelineView.getTimeLineViewType(position,getItemCount());
+        return TimelineView.getTimeLineViewType(position, getItemCount());
     }
 
-    @Override @NonNull
+    @Override
+    @NonNull
     public TimeLineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater mLayoutInflater = LayoutInflater.from(context);
@@ -44,19 +45,18 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
         Event event = eventList.get(position);
 
-        if(event.getStatus() == TimeLineCircle.INACTIVE) {
+        if (event.getStatus() == TimeLineCircle.INACTIVE) {
             holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(context, R.drawable.ic_marker_inactive, android.R.color.darker_gray));
-        } else if(event.getStatus() == TimeLineCircle.ACTIVE) {
+        } else if (event.getStatus() == TimeLineCircle.ACTIVE) {
             holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(context, R.drawable.ic_marker_active, R.color.colorPrimary));
         } else {
             holder.mTimelineView.setMarker(ContextCompat.getDrawable(context, R.drawable.ic_marker), ContextCompat.getColor(context, R.color.colorPrimary));
         }
 
-        if(!event.getDate().isEmpty()) {
+        if (!event.getDate().isEmpty()) {
             holder.mDate.setVisibility(View.VISIBLE);
             holder.mDate.setText(DateTimeUtils.parseDateTime(event.getDate(), "yyyy-MM-dd HH:mm", "hh:mm a, dd-MMM-yyyy"));
-        }
-        else
+        } else
             holder.mDate.setVisibility(View.GONE);
 
         holder.mMessage.setText(event.getTitle());
@@ -64,10 +64,10 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
     @Override
     public int getItemCount() {
-        return (eventList !=null? eventList.size():0);
+        return (eventList != null ? eventList.size() : 0);
     }
 
-    public interface onItemClickListener{
+    public interface onItemClickListener {
         void onItemClicked(int position);
     }
 }

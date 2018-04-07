@@ -41,9 +41,9 @@ public class ConnectionsAdapter extends RecyclerView.Adapter<ConnectionViewHolde
     @Override
     public void onBindViewHolder(@NonNull ConnectionViewHolder holder, int position) {
         ImageView profPic = holder.profilePicture;
-        Glide.with(context).load(connectionsList.get(position).getImageURL()).into(profPic);
+        Glide.with(context).load(connectionsList.get(position).getUser().getImageURL()).into(profPic);
         TextView name = holder.nameView;
-        name.setText(connectionsList.get(position).getName());
+        name.setText(connectionsList.get(position).getUser().getFullName());
         TextView relationship = holder.relationshipView;
         relationship.setText(connectionsList.get(position).getRelation());
     }

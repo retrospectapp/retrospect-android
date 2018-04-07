@@ -18,7 +18,6 @@ import java.util.List;
 
 /**
  * Created by nithin on 2/28/2018.
- *
  */
 
 public class TimelineFragment extends Fragment implements TimeLineAdapter.onItemClickListener {
@@ -31,7 +30,7 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_timeline, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.timelineRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

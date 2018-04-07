@@ -7,12 +7,6 @@ package com.retrospect.retrospect;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-/**
- * Created by Shivam on 1/19/2018.
- *
- */
-
-
 @SuppressWarnings("unused")
 public class Connection {
 
@@ -20,6 +14,7 @@ public class Connection {
     private String relation;
     private String jingleURL;
     private DocumentReference userReference;
+    private boolean isSelected = false;
 
     public Connection(){}
 
@@ -52,5 +47,12 @@ public class Connection {
         this.jingleURL = jingleURL;
     }
 
-}
+    public boolean isSelected(){
+        return isSelected;
+    }
 
+    public void setIsSelected(boolean selected){
+        isSelected = selected;
+    }
+
+}

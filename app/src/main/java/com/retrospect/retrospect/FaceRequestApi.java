@@ -29,10 +29,32 @@ import java.util.UUID;
  */
 
 @SuppressWarnings("unused")
-public abstract class FaceRequestApi {
+public class FaceRequestApi {
+    private static final String TAG = FaceRequestApi.class.getSimpleName();
     private static FaceServiceClient faceServiceClient =
             new FaceServiceRestClient("https://westcentralus.api.cognitive.microsoft.com/face/v1.0",
                     "068682577ef84250b24aafbc3b2c8e66");
+
+    public Face[] getFaces(InputStream image) {
+        Face[] result;
+        try {
+            return new DetectFace().execute().get();
+        } catch (Exception e) {
+            Log.d(TAG, "Could not retrieve detection results: ", e);
+            return null;
+        }
+//        new DetectFace(detectFaceResponse).execute(image);
+    }
+
+    public IdentifyResult[] identifyFaces(String personGroupId, UUID[] faces, int maxNumCandidates) {
+        IdentifyResult[] result;
+        try {
+            return new IdentifyPerson(personGroupId, faces, maxNumCandidates).execute().get();
+        } catch (Exception e) {
+            Log.d(TAG, "Could not retrieve identification results: ", e);
+            return null;
+        }
+    }
 
     static class DetectFace extends AsyncTask<InputStream, String, Face[]> {
         private static final String TAG = "DETECT_FACE";
@@ -43,9 +65,9 @@ public abstract class FaceRequestApi {
 
         private DetectFaceResponse detectFaceResponse = null;
 
-        private DetectFace(DetectFaceResponse detectFaceResponse){
-            this.detectFaceResponse = detectFaceResponse;
-        }
+//        private DetectFace(DetectFaceResponse detectFaceResponse) {
+//            this.detectFaceResponse = detectFaceResponse;
+//        }
 
         @Override
         protected void onPostExecute(Face[] faces) {
@@ -65,45 +87,46 @@ public abstract class FaceRequestApi {
                     Log.d(TAG, "No faces found");
                     return null;
                 }
-                Log.d(TAG,String.format(Locale.US, "Detection Finished. %d face(s) detected",
-                                result.length));
+                Log.d(TAG, String.format(Locale.US, "Detection Finished. %d face(s) detected",
+                        result.length));
                 return result;
             } catch (Exception e) {
-                Log.d(TAG,"Detection failed", e);
+                Log.d(TAG, "Detection failed", e);
                 return null;
             }
         }
     }
 
     static class IdentifyPerson extends AsyncTask<Void, Void, IdentifyResult[]> {
-        private static final String TAG = "DETECT_FACE";
+        private static final String TAG = IdentifyPerson.class.getSimpleName();
         private String personGroupId;
         private UUID[] faceIds;
-        private int maxNumOfCandidatesReturned;
-        IdentifyPerson(String personGroupId, UUID[] faceIds, int maxNumOfCandidatesReturned){
+        private int maxNumCandidates;
+
+        IdentifyPerson(String personGroupId, UUID[] faceIds, int maxNumCandidates) {
             this.personGroupId = personGroupId;
-            this. faceIds = faceIds;
-            this.maxNumOfCandidatesReturned = maxNumOfCandidatesReturned;
+            this.faceIds = faceIds;
+            this.maxNumCandidates = maxNumCandidates;
         }
 
         @Override
-        protected IdentifyResult[] doInBackground(Void... voids){
-            try{
+        protected IdentifyResult[] doInBackground(Void... voids) {
+            try {
                 IdentifyResult[] identifyResult = faceServiceClient.identity(
                         personGroupId,
                         faceIds,
-                        maxNumOfCandidatesReturned);
-                if(identifyResult == null) {
+                        maxNumCandidates);
+                if (identifyResult == null) {
                     Log.d(TAG, "Could not identify anyone");
                     return null;
-                } else{
+                } else {
                     Log.d(TAG, String.format(Locale.US,
                             "Identification finished: Identified %d people",
                             identifyResult.length));
                     return identifyResult;
                 }
 
-            } catch(Exception e){
+            } catch (Exception e) {
                 Log.d(TAG, "Identification failed", e);
                 return null;
             }
@@ -117,7 +140,7 @@ public abstract class FaceRequestApi {
         private String groupName;
         private String userData;
 
-        CreatePersonGroup(String personGroupId, String groupName, String userData){
+        CreatePersonGroup(String personGroupId, String groupName, String userData) {
             this.personGroupId = personGroupId;
             this.groupName = groupName;
             this.userData = userData;
@@ -145,16 +168,16 @@ public abstract class FaceRequestApi {
 
         ListResponse listResponse = null;
 
-        public ListGroups(ListResponse listResponse){
+        public ListGroups(ListResponse listResponse) {
             this.listResponse = listResponse;
         }
 
-        protected PersonGroup[] doInBackground(String... params){
-            try{
+        protected PersonGroup[] doInBackground(String... params) {
+            try {
                 PersonGroup[] groups = faceServiceClient.getPersonGroups();
                 Log.d(TAG, "Listed available person groups");
                 return groups;
-            }catch(Exception e){
+            } catch (Exception e) {
                 Log.d(TAG, "Could not list person groups.");
                 return null;
             }
@@ -193,7 +216,7 @@ public abstract class FaceRequestApi {
         private String personGroupId;
         private UUID personId;
 
-        DeletePerson(String personGroupId, UUID personId){
+        DeletePerson(String personGroupId, UUID personId) {
             this.personGroupId = personGroupId;
             this.personId = personId;
         }
@@ -220,12 +243,12 @@ public abstract class FaceRequestApi {
         String user_data = null;
         FaceRectangle target_face = null;
 
-        AddPersonFace(String group_ID, UUID user_ID, InputStream img, String user_data, FaceRectangle target_face){
+        AddPersonFace(String group_ID, UUID user_ID, InputStream img, String user_data, FaceRectangle target_face) {
             this.group_ID = group_ID;
-            this.user_ID= user_ID;
+            this.user_ID = user_ID;
             this.img = img;
-            this.user_data= user_data;
-            this.target_face= target_face;
+            this.user_data = user_data;
+            this.target_face = target_face;
         }
 
         @Override
@@ -237,10 +260,10 @@ public abstract class FaceRequestApi {
                         this.img,
                         this.user_data,
                         this.target_face).toString();
-                Log.d(TAG,"Added face to Person");
+                Log.d(TAG, "Added face to Person");
                 return persistedFaceID;
             } catch (Exception e) {
-                Log.d(TAG,"Could not upload Face to Person", e);
+                Log.d(TAG, "Could not upload Face to Person", e);
                 return null;
             }
         }
@@ -250,7 +273,8 @@ public abstract class FaceRequestApi {
         private static final String TAG = "TRAIN_GROUP";
 
         private String personGroupId;
-        TrainPersonGroup(String personGroupId){
+
+        TrainPersonGroup(String personGroupId) {
             this.personGroupId = personGroupId;
         }
 

@@ -28,7 +28,7 @@ public class ConnectionsFragment extends Fragment implements ConnectionsAdapter.
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.connection_list, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.connectionRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -45,7 +45,7 @@ public class ConnectionsFragment extends Fragment implements ConnectionsAdapter.
 
     @Override
     public void onItemClicked(int position) {
-        Log.d(TAG, "Title of event being clicked is: " + connectionsList.get(position).getName());
+        Log.d(TAG, "Title of event being clicked is: " + connectionsList.get(position).getUser().getFullName());
     }
 }
 
