@@ -87,6 +87,9 @@ public class Identify extends android.support.v4.app.Fragment {
             faceIds[i] = faces[i].faceId;
         }
         IdentifyResult[] identifyResults = faceRequestApi.identifyFaces(userId, faceIds, 1);
+        ImageView imageView = view.findViewById(R.id.imageView1);
+        imageView.setImageBitmap(drawFaceRectanglesOnBitmap(imageBitmap, faces));
+        imageBitmap.recycle();
         identifyPersons(identifyResults);
     }
 
