@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,9 +17,9 @@ import java.util.List;
 
 public class ReminderCardAdapter extends RecyclerView.Adapter<ReminderCardAdapter.ReminderCardViewHolder> {
     private Context mContext;
-    private List<Reminder> reminderList;
+    private ArrayList<Reminder> reminderList;
 
-    public ReminderCardAdapter(List<Reminder> reminderList, Context mContext) {
+    public ReminderCardAdapter(ArrayList<Reminder> reminderList, Context mContext) {
         this.mContext = mContext;
         this.reminderList = reminderList;
     }

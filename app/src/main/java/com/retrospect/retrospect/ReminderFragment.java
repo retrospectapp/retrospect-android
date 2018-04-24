@@ -2,8 +2,6 @@ package com.retrospect.retrospect;
 
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import com.github.clans.fab.FloatingActionButton;
 
@@ -17,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -36,7 +33,7 @@ public class ReminderFragment extends Fragment {
 
     private String uid;
 
-    private List<Reminder> reminderList;
+    private ArrayList<Reminder> reminderList;
     private FirebaseClient client;
 
 
@@ -55,7 +52,7 @@ public class ReminderFragment extends Fragment {
         reminders = (com.github.clans.fab.FloatingActionButton) v.findViewById(R.id.create_remind);
         recyclerView = (RecyclerView) v.findViewById(R.id.reminders_recycler_view);
 
-        uid = getArguments().getString("uid");
+//        uid = getArguments().getString("uid");
 
 
         reminders.show(true);
@@ -63,11 +60,24 @@ public class ReminderFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        reminderList = new ArrayList<>();
 
         //TODO: pull reminders from database and populate list
 
-        reminderList = client.fetchReminders(uid);
+
+//        Log.d("UserID: ", uid);
+
+
+//        try {
+//                reminderList = client.fetchReminders(uid);
+//                adapter = new ReminderCardAdapter(reminderList, getContext());
+//                recyclerView.setAdapter(adapter);
+//
+//        }
+//        catch(NullPointerException e){
+//            Toast.makeText(getActivity(), "There are no reminders", Toast.LENGTH_LONG).show();
+//        }
+
+
 
 //        for (int i=0; i<10; i++){
 //            client.fetc
@@ -76,9 +86,7 @@ public class ReminderFragment extends Fragment {
 //            reminderList.add(card);
 //        }
 
-        adapter = new ReminderCardAdapter(reminderList, getContext());
 
-        recyclerView.setAdapter(adapter);
 
         reminders.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +97,9 @@ public class ReminderFragment extends Fragment {
                 createReminderFragment.setArguments(bundle);
                 reminders.hide(true);
                 android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_bottom,R.anim.slide_in_top, R.anim.slide_out_bottom);
                 fragmentTransaction.replace(R.id.contentContainer, createReminderFragment);
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
 
             }

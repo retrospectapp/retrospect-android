@@ -27,6 +27,12 @@ public class Connection {
         this.userRef = userRef;
     }
 
+    public Connection(User patient, String patient1, String jingleAudioURL) {
+        this.userID = userID;
+        this.personID = personID;
+
+    }
+
     public String getUserID(){
         return userID;
     }

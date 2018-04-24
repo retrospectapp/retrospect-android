@@ -57,6 +57,8 @@ public class CreateReminderFragment extends Fragment implements TimePickerDialog
 
     private ReminderFragment reminderFragment;
 
+//    private FirebaseClient client;
+
     public CreateReminderFragment() {
         // Required empty public constructor
     }
@@ -142,13 +144,13 @@ public class CreateReminderFragment extends Fragment implements TimePickerDialog
                 calendar.set(Calendar.SECOND, 0);
 
                 //TODO: create reminder and push to database
-                FirebaseClient client = new FirebaseClient();
                 //String title, String date, String time, String period, String details)
 
-                Reminder reminder = new Reminder(noti_title, date, time, period, noti_descrip);
-                client.createReminder(uid, Integer.toString(notifyID), reminder);
-
-                Toast.makeText(getContext(), "Reminder Set", Toast.LENGTH_LONG).show();
+//                client = new FirebaseClient();
+//                Reminder reminder = new Reminder(noti_title, date, time, period, noti_descrip);
+//                client.createReminder(uid, Integer.toString(notifyID), reminder);
+//
+//                Toast.makeText(getContext(), "Reminder Set", Toast.LENGTH_LONG).show();
 
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
 

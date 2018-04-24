@@ -1,6 +1,9 @@
 package com.retrospect.retrospect;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private FloatingActionMenu floatingActionMenu;
     private FloatingActionButton createRemind;
+    private ActionBar bar;
 
     private String accountUID;
 
@@ -29,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timeline_ui);
 
         accountUID = getIntent().getStringExtra("uid");
+
+        bar = getActionBar();
 
 
 
@@ -41,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         setFragment(new TimelineFragment());
+        mainNav.setItemBackgroundResource(R.color.timeline_nav_color);
 
         createRemind.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_reminders :
-//                      mainNav.setItemBackgroundResource(R.color.colorPrimary);
+                        mainNav.setItemBackgroundResource(R.color.reminders_nav_color);
                         floatingActionMenu.hideMenuButton(true);
                         ReminderFragment fragment1 = new ReminderFragment();
                         fragment1.setArguments(bundle);
@@ -67,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.nav_events :
-//                        mainNav.setItemBackgroundResource(R.color.colorPrimary);
+                        mainNav.setItemBackgroundResource(R.color.timeline_nav_color);
                         floatingActionMenu.showMenuButton(true);
                         TimelineFragment fragment2 = new TimelineFragment();
                         fragment2.setArguments(bundle);
@@ -75,19 +82,19 @@ public class MainActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.nav_connections :
-//                        mainNav.setItemBackgroundResource(R.color.colorPrimary);
+                        mainNav.setItemBackgroundResource(R.color.connections_nav_color);
 //                        setFragment(connectionsFragment);
                         return true;
 
                     case R.id.nav_identify :
-//                        mainNav.setItemBackgroundResource(R.color.colorPrimary);
+                        mainNav.setItemBackgroundResource(R.color.identify_nav_color);
 //                        setFragment(identifyFragment);
                         return true;
 
                     case R.id.nav_profile :
-//                        mainNav.setItemBackgroundResource(R.color.colorPrimary);
-//                        setFragment(profileFragment);
+                        mainNav.setItemBackgroundResource(R.color.profile_nav_color);
                         return true;
+
 
                     default:
                         return false;
