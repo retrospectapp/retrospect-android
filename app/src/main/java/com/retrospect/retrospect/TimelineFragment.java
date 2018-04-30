@@ -1,5 +1,8 @@
 package com.retrospect.retrospect;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -33,11 +36,15 @@ import java.util.List;
 public class TimelineFragment extends Fragment implements TimeLineAdapter.onItemClickListener, OnMapReadyCallback {
 
     private  ArrayList<String> mImageUrls = new ArrayList<>();
+    private  ArrayList<String> mProfileImageUrls = new ArrayList<>();
+    private  ArrayList<String> mProfileNames = new ArrayList<>();
     private List<Event> eventList = new ArrayList<>();
     private final static String TAG = "TOUCHEVENT";
     private SlidingUpPanelLayout slidingUpPanelLayout;
     private MapView mMapView;
     private GoogleMap mMap;
+    private FirebaseClient client = new FirebaseClient();
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -65,27 +72,34 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
                     slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }
         });
-        getImages(view);
+        initSidewaysImageScroll(view);
+        initPeopleInvolved(view);
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.detailsMap);
-        Log.d("BITCH", String.valueOf(mapFragment==null));
         mapFragment.getMapAsync(this);
+
+        SlidingUpPanelLayout mSlideUpLayout = new SlidingUpPanelLayout(getContext());
+        mSlideUpLayout.setScrollableView(view.findViewById(R.id.slidingScrollView));
 
         return view;
     }
 
-    private void getImages(View view){
-        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");    //doesn't work
-        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
-        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
-        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
-        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
-        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
-        mImageUrls.add("https://imgur.com/ZcLLrkY.jpg");
-        initSidewaysImageScroll(view);
+    private void initPeopleInvolved(View view){
+        //begin hardcoding//
+        mProfileImageUrls.add("urlgoeshere");
+        mProfileNames.add("Booooob");
+        RecyclerView imageScroll = view.findViewById(R.id.people_involved);
+        imageScroll.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        PeopleInvolvedAdapter adapter = new PeopleInvolvedAdapter(getActivity(), mProfileImageUrls, mProfileNames);
+        imageScroll.setAdapter(adapter);
+
     }
 
     private void initSidewaysImageScroll(View view){
+        //hardcoding start//
+        mImageUrls.add("urlgoeshere");
+        //end hardcoding
+
         RecyclerView imageScroll = view.findViewById(R.id.horiz_image_scroll);
         imageScroll.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         HorizImageAdapter adapter = new HorizImageAdapter(getActivity(),mImageUrls);
@@ -93,11 +107,12 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
     }
 
     private void getData() {
-        HashMap<String, String> hmapTest = new HashMap<>(); //TODO remove
+        //List<Event> listofevents = client.fetchEvents();
+        HashMap<String, String> hmapTest = new HashMap<>(); //TODO remove hardcoding
         HashMap<String, String[]> hmapTest2 = new HashMap<>(); //TODO remove
-        eventList.add(new Event("Test 0", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details1", "location", hmapTest2, hmapTest));
-        eventList.add(new Event("Test 1", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details2", "location", hmapTest2, hmapTest));
-        eventList.add(new Event("Test 2", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details2", "location", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 0", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details1", "Inklings Coffee, Pleasanton", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 1", "1998-12-16 09:30", TimeLineCircle.ACTIVE, "details2", "3526 Sandalford Way, San Ramon, CA", hmapTest2, hmapTest));
+        eventList.add(new Event("Test 2", "1998-12-16 09:30", TimeLineCircle.COMPLETED, "details2", "location", hmapTest2, hmapTest));
         eventList.add(new Event("Test 3", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details3", "location", hmapTest2, hmapTest));
         eventList.add(new Event("Test 4", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details4", "location", hmapTest2, hmapTest));
         eventList.add(new Event("Test 5", "1998-12-16 09:30", TimeLineCircle.INACTIVE, "details", "location", hmapTest2, hmapTest));
@@ -115,17 +130,54 @@ public class TimelineFragment extends Fragment implements TimeLineAdapter.onItem
         title.setText(eventList.get(position).getTitle());
         EditText details = getActivity().findViewById(R.id.details_description);
         details.setText(eventList.get(position).getDetails());
+        LatLng address = getLocationFromAddress(getContext(),eventList.get(position).getLocation());
+        mMap.clear();
+        mMap.addMarker(new MarkerOptions().position(address).title(eventList.get(position).getLocation()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(address));
+        mMap.setMinZoomPreference(11);
+        mMap.setMaxZoomPreference(12);
+        //mImageUrls.clear();
+
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
-        // DO WHATEVER YOU WANT WITH GOOGLEMAP
-        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap = map;
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         //map.setMyLocationEnabled(true);
-        map.setTrafficEnabled(true);
-        map.setIndoorEnabled(true);
-        map.setBuildingsEnabled(true);
-        map.getUiSettings().setZoomControlsEnabled(true);
+        //map.setTrafficEnabled(true);
+
+        mMap.setIndoorEnabled(true);
+        mMap.setBuildingsEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        mMap.getUiSettings().setAllGesturesEnabled(false);
+    }
+
+    public LatLng getLocationFromAddress(Context context, String strAddress)
+    {
+        Geocoder coder= new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try
+        {
+            address = coder.getFromLocationName(strAddress, 5);
+            if(address==null)
+            {
+                return null;
+            }
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return p1;
     }
 
 }

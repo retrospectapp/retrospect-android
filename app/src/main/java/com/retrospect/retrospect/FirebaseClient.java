@@ -34,7 +34,7 @@ public class FirebaseClient {
     private static final String CONTAG = "ConnectionData";
     private static final String UPTAG = "UploadData";
 
-    private CollectionReference mUserRef = FirebaseFirestore.getInstance().collection("sampleData/Users");
+    private CollectionReference mUserRef = FirebaseFirestore.getInstance().collection("Users");
     private StorageReference mProfileImagesRef = FirebaseStorage.getInstance().getReference().child("profileImages");
     private StorageReference mEventImagesRef = FirebaseStorage.getInstance().getReference().child("eventImages");
 

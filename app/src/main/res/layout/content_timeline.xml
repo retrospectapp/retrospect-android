@@ -10,10 +10,11 @@
     sothree:umanoOverlay="true"
     sothree:umanoPanelHeight="68dp"
     sothree:umanoParallaxOffset="100dp"
-    sothree:umanoScrollableView="@+id/list"
+    sothree:umanoScrollableView="@+id/slidingScrollView"
     sothree:umanoShadowHeight="4dp">
 
     <android.support.v7.widget.RecyclerView
+
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
