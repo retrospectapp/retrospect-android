@@ -6,4 +6,17 @@
     <color name="colorText">#212121</color>
     <color name="background">#FFFFFF</color>
     <color name="graylight">#ababab</color>
+    <color name="colorWhiteTransparent">#80ffffff</color>
+    <color name="reminderCardColor">#fafafa</color>
+
+
+    <color name="timeline_nav_color">#f44336</color>
+
+    <color name="reminders_nav_color">#8bc34a</color>
+
+    <color name="connections_nav_color">#42a5f5</color>
+
+    <color name="identify_nav_color">#8c9eff</color>
+
+    <color name="profile_nav_color">#ea80fc</color>
 </resources>

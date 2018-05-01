@@ -30,6 +30,15 @@ public class Reminder {
         this.imageURLs = imageURLS;
     }
 
+    //constructor without audio and images
+    public Reminder (String title, String date, String time, String period, String details){
+        this.title = title;
+        this.date = date;
+        this.time = time;
+        this.period = period;
+        this.details = details;
+    }
+
     public String getTitle(){
         return title;
     }
@@ -77,6 +86,7 @@ public class Reminder {
     public ArrayList<String> getImageURLs() { return imageURLs; }
 
     public void setImageURLs(ArrayList<String> imageURLs) { this.imageURLs = imageURLs; }
+
     public String toString(){
         return "Title: " + title + "\n" + "Date: " + date + "\n" + "Time: " + time + "\n" + "Period: " + period + "\n" + "Details: " + details + "\n";
     }
